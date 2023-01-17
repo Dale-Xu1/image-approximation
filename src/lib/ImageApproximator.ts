@@ -1,7 +1,7 @@
 import Image from "./Image"
-import Color4 from "./math/Color4"
+import { Color4 } from "./Math"
 
-const MAX_DIMENSION = 256;
+const MAX_DIMENSION = 256
 
 export default class ImageApproximator
 {
@@ -65,9 +65,9 @@ export default class ImageApproximator
         this.handler = window.requestAnimationFrame(this.run.bind(this))
 
         this.image.render()
-        let error = this.error(this.target, this.image.data)
+        // let error = this.error(this.target, this.image.data)
 
-        console.log(error)
+        // console.log(error)
     }
 
     public stop() { window.cancelAnimationFrame(this.handler) }
@@ -87,8 +87,7 @@ export default class ImageApproximator
             sum += r * r + g * g + b * b + a * a
         }
 
-        let count = t.length / 4
-        return Math.sqrt(sum / count)
+        return Math.sqrt(sum / t.length)
     }
 
 }
