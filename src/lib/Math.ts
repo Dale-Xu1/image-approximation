@@ -1,14 +1,10 @@
-export class Vector2
+export class Random
 {
 
-    public constructor(public x: number, public y: number) { }
+    public static next(range: number = 1): number { return Math.random() * range }
+    public static int(range: number): number { return Math.floor(Random.next(range)) }
 
-    public static random(width: number, height: number): Vector2
-    {
-        return new Vector2(Math.random() * width, Math.random() * height)
-    }
-
-    public static normalValue(sd: number): number
+    public static normal(sd: number): number
     {
         let u = 1 - Math.random()
         let v = 1 - Math.random()
@@ -16,9 +12,21 @@ export class Vector2
         return Math.sqrt(-2 * Math.log(u)) * Math.sin(2 * Math.PI * v) * sd
     }
 
+}
+
+export class Vector2
+{
+
+    public constructor(public x: number, public y: number) { }
+
+    public static random(width: number, height: number): Vector2
+    {
+        return new Vector2(Random.next(width), Random.next(height))
+    }
+
     public static normal(sd: number): Vector2
     {
-        return new Vector2(Vector2.normalValue(sd), Vector2.normalValue(sd))
+        return new Vector2(Random.normal(sd), Random.normal(sd))
     }
 
 
@@ -41,7 +49,7 @@ export class Color4
 
     public static random(): Color4
     {
-        return new Color4(Math.random(), Math.random(), Math.random(), Math.random())
+        return new Color4(Math.random(), Math.random(), Math.random(), 0.8) // Math.random())
     }
 
 

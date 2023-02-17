@@ -2,15 +2,19 @@ import Image from "./Image"
 import { Color4 } from "./Math"
 
 const MAX_DIMENSION = 256
+const EXPORT_DIMENSION = 3840
 
 export default class ImageApproximator
 {
 
+    private readonly ratio: number
     private readonly target: ImageData
+
 
     public constructor(canvas: HTMLCanvasElement, image: HTMLImageElement)
     {
-        let [width, height] = this.dimensions(MAX_DIMENSION, image.width / image.height)
+        this.ratio = image.width / image.height
+        let [width, height] = this.dimensions(MAX_DIMENSION, this.ratio)
 
         canvas.width = image.width = width
         canvas.height = image.height = height
@@ -18,7 +22,9 @@ export default class ImageApproximator
         let c = canvas.getContext("2d")!
 
         this.target = this.resizeImageData(image, width, height)
+
         this.image = new Image(c, width, height, this.averageColor(this.target))
+        this.pe = this.error(this.target, this.image.data)
     }
 
     private dimensions(max: number, ratio: number): [number, number]
@@ -59,18 +65,74 @@ export default class ImageApproximator
 
     private readonly image: Image
 
+    private pe: number
+    private e: number = Infinity
+
+    private i: number = 0
+    private j: number = 0
+    private k: number = 0
+
     private handler!: number
     public run()
     {
         this.handler = window.requestAnimationFrame(this.run.bind(this))
 
-        this.image.render()
-        // let error = this.error(this.target, this.image.data)
+        for (let n = 0; n < 500; n++)
+        {
+            if (Math.random() < 0.01) this.image.resetShape()
+            else this.image.mutate()
+            this.image.render()
 
-        // console.log(error)
+            let error = this.error(this.target, this.image.data)
+            // let rand = Math.random() < 0.005
+            let rand = false
+            if (error < this.e || rand)
+            {
+                if (error < this.pe) this.i++
+                this.e = error
+            }
+            else this.image.undo()
+
+            if (!rand) this.k++
+            if (this.e < this.pe)
+            {
+                this.j++
+                if (this.i > 500 || this.j > 2500)
+                {
+                    this.pe = this.e
+                    this.e = Infinity
+
+                    this.i = 0
+                    this.j = 0
+                    this.k = 0
+
+                    this.image.nextShape()
+                }
+            }
+            else if (this.k > 10000)
+            {
+                this.e = Infinity
+                
+                this.i = 0
+                this.j = 0
+                this.k = 0
+
+                this.image.nextShape()
+                // this.image.resetShape()
+            }
+        }
+
+        console.log(this.image.shapes.length, this.i, this.j, this.k, this.e)
     }
 
     public stop() { window.cancelAnimationFrame(this.handler) }
+
+    public export(): string
+    {
+        let [width, height] = this.dimensions(EXPORT_DIMENSION, this.ratio)
+        return this.image.export(width, height)
+    }
+
 
     private error(target: ImageData, current: ImageData): number
     {
