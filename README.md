@@ -17,3 +17,9 @@ Next, create and run a development build:
 ```bash
 npm run dev
 ```
+
+## Examples
+
+![h250](https://user-images.githubusercontent.com/69087617/219876123-d66c71b6-c96c-427f-b62b-620dffc203fa.png)
+
+![m3](https://user-images.githubusercontent.com/69087617/219876129-28e8f9f9-79f3-4f51-84f0-f7a551e627a2.png)
