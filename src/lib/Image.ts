@@ -1,5 +1,5 @@
 import type { Color4 } from "./Math"
-import { Ellipse, Rectangle, Triangle, type Shape } from "./Shape"
+import type { Shape } from "./Shape"
 
 export default class Image
 {
@@ -10,8 +10,8 @@ export default class Image
         private readonly width: number, private readonly height: number,
         public readonly background: Color4)
     {
-        this.renderAll()
-        this.nextShape()
+        this.render()
+        this.image = this.data
     }
 
 
@@ -19,39 +19,22 @@ export default class Image
 
     private image!: ImageData
 
-    private previous!: Shape
-    private shape: Shape = null!
-
-    public nextShape()
-    {
-        if (this.shape) this.shapes.push(this.shape)
-        this.shape = Rectangle.random(this.width, this.height)
-
-        this.image = this.data
-        this.previous = this.shape
-    }
-
-    public resetShape()
-    {
-        this.previous = this.shape
-        this.shape = Rectangle.random(this.width, this.height)
-    }
-
-    public undo() { this.shape = this.previous }
-    public mutate()
-    {
-        this.previous = this.shape
-        this.shape = this.shape.mutate()
-    }
-
-
-    public render()
+    public renderIteration(shape: Shape)
     {
         this.c.putImageData(this.image, 0, 0)
-        this.shape.render(this.c)
+        shape.render(this.c)
     }
 
-    public renderAll(c: CanvasRenderingContext2D = this.c)
+    public addShape(shape: Shape)
+    {
+        this.renderIteration(shape)
+        this.shapes.push(shape)
+
+        this.image = this.data
+    }
+
+
+    public render(c: CanvasRenderingContext2D = this.c)
     {
         c.fillStyle = this.background.style
         c.fillRect(0, 0, this.width, this.height)
@@ -68,9 +51,28 @@ export default class Image
         canvas.height = height
 
         c.scale(width / this.width, height / this.height)
-        this.renderAll(c)
+        this.render(c)
 
         return canvas.toDataURL()
+    }
+
+
+    public error(target: ImageData): number
+    {
+        let t = target.data, c = this.data.data
+        let sum = 0
+
+        for (let i = 0; i < t.length; i += 4)
+        {
+            let r = t[i] - c[i]
+            let g = t[i + 1] - c[i + 1]
+            let b = t[i + 2] - c[i + 2]
+            let a = t[i + 3] - c[i + 3]
+
+            sum += r * r + g * g + b * b + a * a
+        }
+
+        return Math.sqrt(sum / t.length)
     }
 
 }

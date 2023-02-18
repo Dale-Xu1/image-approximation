@@ -1,5 +1,6 @@
 import Image from "./Image"
-import { Color4 } from "./Math"
+import { Color4, Random } from "./Math"
+import { Ellipse, Rectangle, Triangle, type Shape } from "./Shape"
 
 const MAX_DIMENSION = 256
 const EXPORT_DIMENSION = 3840
@@ -8,23 +9,27 @@ export default class ImageApproximator
 {
 
     private readonly ratio: number
-    private readonly target: ImageData
+
+    private readonly width: number
+    private readonly height: number
 
 
     public constructor(canvas: HTMLCanvasElement, image: HTMLImageElement)
     {
+        // Calculate canvas dimensions based on original aspect ratio
         this.ratio = image.width / image.height
         let [width, height] = this.dimensions(MAX_DIMENSION, this.ratio)
 
-        canvas.width = image.width = width
-        canvas.height = image.height = height
+        this.width = canvas.width = image.width = width
+        this.height = canvas.height = image.height = height
 
         let c = canvas.getContext("2d")!
 
+        // Create image with background as the average color
         this.target = this.resizeImageData(image, width, height)
-
         this.image = new Image(c, width, height, this.averageColor(this.target))
-        this.pe = this.error(this.target, this.image.data)
+
+        this.start()
     }
 
     private dimensions(max: number, ratio: number): [number, number]
@@ -42,6 +47,7 @@ export default class ImageApproximator
         canvas.width = width
         canvas.height = height
 
+        // Resize image to width and height
         c.drawImage(image, 0, 0, width, height)
         return c.getImageData(0, 0, width, height)
     }
@@ -64,13 +70,24 @@ export default class ImageApproximator
 
 
     private readonly image: Image
+    private readonly target: ImageData
+    
+    private start()
+    {
+        this.shape = Rectangle.random(this.width, this.height)
+        this.best = this.shape
+        
+        this.image.renderIteration(this.shape)
+        this.error = this.image.error(this.target)
+    }
 
-    private pe: number
-    private e: number = Infinity
+    private shape: Shape = null!
+    private best: Shape = null!
+
+    private previous: number = Infinity
+    private error: number = Infinity
 
     private i: number = 0
-    private j: number = 0
-    private k: number = 0
 
     private handler!: number
     public run()
@@ -79,77 +96,46 @@ export default class ImageApproximator
 
         for (let n = 0; n < 500; n++)
         {
-            if (Math.random() < 0.01) this.image.resetShape()
-            else this.image.mutate()
-            this.image.render()
-
-            let error = this.error(this.target, this.image.data)
-            // let rand = Math.random() < 0.005
-            let rand = false
-            if (error < this.e || rand)
+            switch (Random.int(3))
             {
-                if (error < this.pe) this.i++
-                this.e = error
+                case 0: this.shape = Rectangle.random(this.width, this.height); break
+                case 1: this.shape = this.shape.mutate(); break
+                case 2: this.shape = this.best.mutate(); break
             }
-            else this.image.undo()
+            
+            this.image.renderIteration(this.shape)
+            let error = this.image.error(this.target)
 
-            if (!rand) this.k++
-            if (this.e < this.pe)
+            if (error < this.error)
             {
-                this.j++
-                if (this.i > 500 || this.j > 2500)
+                this.best = this.shape
+                this.error = error
+            }
+
+            if (this.error < this.previous)
+            {
+                this.i++
+                if (this.i > 5000)
                 {
-                    this.pe = this.e
-                    this.e = Infinity
+                    this.image.addShape(this.best)
+                    this.previous = this.error
 
+                    this.start()
                     this.i = 0
-                    this.j = 0
-                    this.k = 0
-
-                    this.image.nextShape()
                 }
             }
-            else if (this.k > 10000)
-            {
-                this.e = Infinity
-                
-                this.i = 0
-                this.j = 0
-                this.k = 0
-
-                this.image.nextShape()
-                // this.image.resetShape()
-            }
         }
-
-        console.log(this.image.shapes.length, this.i, this.j, this.k, this.e)
+        
+        console.log(this.image.shapes.length, this.i, this.error)
     }
 
     public stop() { window.cancelAnimationFrame(this.handler) }
+
 
     public export(): string
     {
         let [width, height] = this.dimensions(EXPORT_DIMENSION, this.ratio)
         return this.image.export(width, height)
-    }
-
-
-    private error(target: ImageData, current: ImageData): number
-    {
-        let t = target.data, c = current.data
-        let sum = 0
-
-        for (let i = 0; i < t.length; i += 4)
-        {
-            let r = t[i] - c[i]
-            let g = t[i + 1] - c[i + 1]
-            let b = t[i + 2] - c[i + 2]
-            let a = t[i + 3] - c[i + 3]
-
-            sum += r * r + g * g + b * b + a * a
-        }
-
-        return Math.sqrt(sum / t.length)
     }
 
 }

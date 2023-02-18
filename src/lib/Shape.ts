@@ -1,6 +1,7 @@
 import { Color4, Random, Vector2 } from "./Math"
 
 const RANGE = 100
+const MIN_WIDTH = 1.5
 
 const POSITION_SD = 4
 const ANGLE_SD = 0.1
@@ -89,8 +90,8 @@ export class Rectangle extends Shape
         let position = Vector2.random(width, height)
         let a = Random.next(2 * Math.PI)
 
-        let w = Random.next(RANGE)
-        let h = Random.next(RANGE)
+        let w = Random.next(RANGE) + MIN_WIDTH
+        let h = Random.next(RANGE) + MIN_WIDTH
 
         let color = Color4.random()
         return new Rectangle(position, a, w, h, color)
@@ -108,8 +109,8 @@ export class Rectangle extends Shape
                 w += Random.normal(POSITION_SD)
                 h += Random.normal(POSITION_SD)
 
-                if (w < 1) w = 1
-                if (h < 1) h = 1
+                if (w < MIN_WIDTH) w = MIN_WIDTH
+                if (h < MIN_WIDTH) h = MIN_WIDTH
                 break
             }
             case 2: a += Random.normal(ANGLE_SD); break
