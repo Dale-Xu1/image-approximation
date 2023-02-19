@@ -29,15 +29,25 @@ export class Vector2
         return new Vector2(Random.normal(sd), Random.normal(sd))
     }
 
-
-    public add(vector: Vector2): Vector2
+    public static dist(a: Vector2, b: Vector2): number
     {
-        return new Vector2(this.x + vector.x, this.y + vector.y)
+        let c = a.sub(b)
+        return Math.sqrt(c.x ** 2 + c.y ** 2)
     }
-    
-    public sub(vector: Vector2): Vector2
+
+
+    public add(vector: Vector2): Vector2 { return new Vector2(this.x + vector.x, this.y + vector.y) }
+    public sub(vector: Vector2): Vector2 { return new Vector2(this.x - vector.x, this.y - vector.y) }
+
+    public mul(value: number): Vector2 { return new Vector2(this.x * value, this.y * value) }
+    public div(value: number): Vector2 { return new Vector2(this.x / value, this.y / value) }
+
+    public rotate(a: number): Vector2
     {
-        return new Vector2(this.x - vector.x, this.y - vector.y)
+        return new Vector2(
+            this.x * Math.cos(a) - this.y * Math.sin(a),
+            this.x * Math.sin(a) + this.y * Math.cos(a)
+        )
     }
 
 }
@@ -49,7 +59,7 @@ export class Color4
 
     public static random(): Color4
     {
-        return new Color4(Math.random(), Math.random(), Math.random(), 0.8) // Math.random())
+        return new Color4(Math.random(), Math.random(), Math.random(), 0.8)
     }
 
 

@@ -71,18 +71,29 @@ export default class ImageApproximator
 
     private readonly image: Image
     private readonly target: ImageData
-    
-    private start()
+
+    private reset()
     {
         this.shape = Rectangle.random(this.width, this.height)
+        // switch (Random.int(3))
+        // {
+        //     case 0: this.shape = Triangle.random(this.width, this.height); break
+        //     case 1: this.shape = Rectangle.random(this.width, this.height); break
+        //     case 2: this.shape = Ellipse.random(this.width, this.height); break
+        // }
+    }
+
+    private start()
+    {
+        this.reset()
         this.best = this.shape
-        
+
         this.image.renderIteration(this.shape)
         this.error = this.image.error(this.target)
     }
 
     private shape: Shape = null!
-    private best: Shape = null!
+    private best: Shape = null! // TODO: Bug where best shape becomes shape not within image
 
     private previous: number = Infinity
     private error: number = Infinity
@@ -98,7 +109,7 @@ export default class ImageApproximator
         {
             switch (Random.int(3))
             {
-                case 0: this.shape = Rectangle.random(this.width, this.height); break
+                case 0: this.reset(); break
                 case 1: this.shape = this.shape.mutate(); break
                 case 2: this.shape = this.best.mutate(); break
             }

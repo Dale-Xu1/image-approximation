@@ -24,7 +24,6 @@ export abstract class Shape
         let r = this.clamp(this.color.r + Random.normal(COLOR_SD))
         let g = this.clamp(this.color.g + Random.normal(COLOR_SD))
         let b = this.clamp(this.color.b + Random.normal(COLOR_SD))
-        // let a = this.clamp(this.color.a + Random.normal(COLOR_SD))
         let a = this.color.a
 
         return new Color4(r, g, b, a)
@@ -47,19 +46,60 @@ export class Triangle extends Shape
         let b = position.add(Vector2.random(RANGE, RANGE)).sub(offset)
         let c = position.add(Vector2.random(RANGE, RANGE)).sub(offset)
 
+        // Reject if triangle is too thin
+        if (Triangle.thin(a, b, c)) return Triangle.random(width, height)
+
         let color = Color4.random()
         return new Triangle(a, b, c, color)
     }
 
+    private static thin(a: Vector2, b: Vector2, c: Vector2): boolean
+    {
+        // Find length of longest side
+        const max = Math.max(Vector2.dist(a, b), Vector2.dist(b, c), Vector2.dist(c, a))
+        const area = a.x * (b.y - c.y) + b.x * (c.y - a.y) + c.x * (a.y - b.y)
+
+        const s = area / (2 * MIN_WIDTH)
+        return s < max
+    }
+
+
+    private shift(): Triangle
+    {
+        let a = this.a.add(Vector2.normal(POSITION_SD))
+        let b = this.b.add(Vector2.normal(POSITION_SD))
+        let c = this.c.add(Vector2.normal(POSITION_SD))
+
+        // Reject if triangle is too thin
+        if (Triangle.thin(a, b, c)) return this.shift()
+        return new Triangle(a, b, c, this.color)
+    }
 
     public mutate(): Triangle
     {
         let a = this.a, b = this.b, c = this.c, color = this.color
         switch (Random.int(4))
         {
-            case 0: a = a.add(Vector2.normal(POSITION_SD)); break
-            case 1: b = b.add(Vector2.normal(POSITION_SD)); break
-            case 2: c = c.add(Vector2.normal(POSITION_SD)); break
+            case 0:
+            {
+                let d = Vector2.normal(POSITION_SD)
+
+                a = a.add(d)
+                b = b.add(d)
+                c = c.add(d)
+                break   
+            }
+            case 1: return this.shift()
+            case 2:
+            {
+                let center = a.add(b).add(c).div(3)
+                let d = Random.normal(ANGLE_SD)
+
+                a = a.sub(center).rotate(d).add(center)
+                b = b.sub(center).rotate(d).add(center)
+                c = c.sub(center).rotate(d).add(center)
+                break
+            }
             case 3: color = this.mutateColor(); break
         }
 
@@ -117,16 +157,6 @@ export class Rectangle extends Shape
             case 3: color = this.mutateColor(); break
         }
 
-        // let position = this.position.add(Vector2.normal(POSITION_SD))
-        // let a = this.a + Random.normal(ANGLE_SD)
-
-        // let w = this.w + Random.normal(POSITION_SD)
-        // let h = this.h + Random.normal(POSITION_SD)
-
-        // if (w < 1) w = 1
-        // if (h < 1) h = 1
-        
-        // let color = this.mutateColor()
         return new Rectangle(position, a, w, h, color)
     }
 
@@ -155,8 +185,8 @@ export class Ellipse extends Shape
         let position = Vector2.random(width, height)
         let a = Random.next(2 * Math.PI)
 
-        let w = Random.next(RANGE)
-        let h = Random.next(RANGE)
+        let w = Random.next(RANGE) + MIN_WIDTH
+        let h = Random.next(RANGE) + MIN_WIDTH
 
         let color = Color4.random()
         return new Ellipse(position, a, w, h, color)
@@ -174,8 +204,8 @@ export class Ellipse extends Shape
                 w += Random.normal(POSITION_SD)
                 h += Random.normal(POSITION_SD)
 
-                if (w < 1) w = 1
-                if (h < 1) h = 1
+                if (w < MIN_WIDTH) w = MIN_WIDTH
+                if (h < MIN_WIDTH) h = MIN_WIDTH
                 break
             }
             case 2: a += Random.normal(ANGLE_SD); break
@@ -197,4 +227,30 @@ export class Ellipse extends Shape
 
 }
 
-// TODO: Bezier curves
+export class Bezier extends Shape
+{
+
+    // TODO: Bezier curves
+    public constructor(color: Color4) { super(color) }
+
+    public static random(): Bezier
+    {
+        let color = Color4.random()
+        return new Bezier(color)
+    }
+
+
+    public mutate(): Bezier
+    {
+        let color = this.color
+        color = this.mutateColor()
+
+        return new Bezier(color)
+    }
+
+    public render(c: CanvasRenderingContext2D): void
+    {
+        
+    }
+
+}
