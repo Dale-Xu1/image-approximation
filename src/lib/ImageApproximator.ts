@@ -1,4 +1,4 @@
-import Image from "./Image"
+import Image, { Scanline } from "./Image"
 import { Color4, Random, Vector2 } from "./Math"
 import type Shape from "./Shape/Shape"
 
@@ -114,7 +114,7 @@ export default class ImageApproximator
         let shape = Triangle.random(this.width, this.height)
         // let triangle = new Triangle(new Vector2(40, 10), new Vector2(80, 70), new Vector2(10, 50), Color4.random())
 
-        for (let line of shape.rasterize())
+        for (let line of Scanline.clamp(shape.rasterize(), this.width, this.height))
         {
             this.c.beginPath()
             this.c.moveTo(line.start, line.y)

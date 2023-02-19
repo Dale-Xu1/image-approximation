@@ -16,7 +16,6 @@ export default class Image
 
 
     public get data() { return this.c.getImageData(0, 0, this.width, this.height) }
-
     private image!: ImageData
 
     public renderIteration(shape: Shape)
@@ -82,9 +81,21 @@ export class Scanline
 
     public constructor(public readonly y: number, public readonly start: number, public readonly end: number) { }
 
+    private static limit(x: number, min: number, max: number): number { return Math.min(Math.max(x, min), max) }
     public static clamp(lines: Scanline[], width: number, height: number): Scanline[]
     {
-        return lines
+        let result: Scanline[] = []
+        for (let line of lines)
+        {
+            if (line.y < 0 || line.y >= height) continue
+            if (line.start >= width || line.end < 0) continue
+
+            result.push(new Scanline(line.y,
+                this.limit(line.start, 0, width - 1),
+                this.limit(line.end, 0, width - 1)))
+        }
+
+        return result
     }
 
 }
