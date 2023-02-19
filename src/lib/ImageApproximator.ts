@@ -1,6 +1,9 @@
 import Image from "./Image"
-import { Color4, Random } from "./Math"
-import { Ellipse, Rectangle, Triangle, type Shape } from "./Shape"
+import { Color4, Random, Vector2 } from "./Math"
+import type Shape from "./Shape/Shape"
+
+import Rectangle from "./Shape/Rectangle"
+import Triangle from "./Shape/Triangle"
 
 const MAX_DIMENSION = 256
 const EXPORT_DIMENSION = 3840
@@ -13,6 +16,8 @@ export default class ImageApproximator
     private readonly width: number
     private readonly height: number
 
+    private c: CanvasRenderingContext2D
+
 
     public constructor(canvas: HTMLCanvasElement, image: HTMLImageElement)
     {
@@ -24,6 +29,7 @@ export default class ImageApproximator
         this.height = canvas.height = image.height = height
 
         let c = canvas.getContext("2d")!
+        this.c = c // TODO: REMOVE THIS
 
         // Create image with background as the average color
         this.target = this.resizeImageData(image, width, height)
@@ -103,41 +109,52 @@ export default class ImageApproximator
     private handler!: number
     public run()
     {
-        this.handler = window.requestAnimationFrame(this.run.bind(this))
+        // this.handler = window.requestAnimationFrame(this.run.bind(this))
 
-        for (let n = 0; n < 500; n++)
+        let shape = Triangle.random(this.width, this.height)
+        // let triangle = new Triangle(new Vector2(40, 10), new Vector2(80, 70), new Vector2(10, 50), Color4.random())
+
+        for (let line of shape.rasterize())
         {
-            switch (Random.int(3))
-            {
-                case 0: this.reset(); break
-                case 1: this.shape = this.shape.mutate(); break
-                case 2: this.shape = this.best.mutate(); break
-            }
-            
-            this.image.renderIteration(this.shape)
-            let error = this.image.error(this.target)
-
-            if (error < this.error)
-            {
-                this.best = this.shape
-                this.error = error
-            }
-
-            if (this.error < this.previous)
-            {
-                this.i++
-                if (this.i > 5000)
-                {
-                    this.image.addShape(this.best)
-                    this.previous = this.error
-
-                    this.start()
-                    this.i = 0
-                }
-            }
+            this.c.beginPath()
+            this.c.moveTo(line.start, line.y)
+            this.c.lineTo(line.end, line.y)
+            this.c.stroke()
         }
+
+        // for (let n = 0; n < 8; n++)
+        // {
+        //     switch (Random.int(3))
+        //     {
+        //         case 0: this.reset(); break
+        //         case 1: this.shape = this.shape.mutate(); break
+        //         case 2: this.shape = this.best.mutate(); break
+        //     }
+
+        //     this.image.renderIteration(this.shape)
+        //     let error = this.image.error(this.target)
+
+        //     if (error < this.error)
+        //     {
+        //         this.best = this.shape
+        //         this.error = error
+        //     }
+
+        //     if (this.error < this.previous)
+        //     {
+        //         this.i++
+        //         if (this.i > 5000)
+        //         {
+        //             this.image.addShape(this.best)
+        //             this.previous = this.error
+
+        //             this.start()
+        //             this.i = 0
+        //         }
+        //     }
+        // }
         
-        console.log(this.image.shapes.length, this.i, this.error)
+        // console.log(this.image.shapes.length, this.i, this.error)
     }
 
     public stop() { window.cancelAnimationFrame(this.handler) }

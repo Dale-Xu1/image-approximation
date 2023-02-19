@@ -17,7 +17,7 @@ export class Random
 export class Vector2
 {
 
-    public constructor(public x: number, public y: number) { }
+    public constructor(public readonly x: number, public readonly y: number) { }
 
     public static random(width: number, height: number): Vector2
     {
@@ -50,12 +50,15 @@ export class Vector2
         )
     }
 
+    public trunc(): Vector2 { return new Vector2(Math.trunc(this.x), Math.trunc(this.y)) }
+
 }
 
 export class Color4
 {
 
-    public constructor(public r: number, public g: number, public b: number, public a: number = 1) { }
+    public constructor(public readonly r: number, public readonly g: number, public readonly b: number,
+        public readonly a: number = 1) { }
 
     public static random(): Color4
     {

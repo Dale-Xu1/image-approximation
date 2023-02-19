@@ -1,5 +1,5 @@
 import type { Color4 } from "./Math"
-import type { Shape } from "./Shape"
+import type Shape from "./Shape/Shape"
 
 export default class Image
 {
@@ -73,6 +73,18 @@ export default class Image
         }
 
         return Math.sqrt(sum / t.length)
+    }
+
+}
+
+export class Scanline
+{
+
+    public constructor(public readonly y: number, public readonly start: number, public readonly end: number) { }
+
+    public static clamp(lines: Scanline[], width: number, height: number): Scanline[]
+    {
+        return lines
     }
 
 }
