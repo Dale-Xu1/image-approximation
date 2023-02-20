@@ -2,7 +2,7 @@
 
 ## Overview
 
-This program attempts to approximate an image using geometry. This is still slightly work in progress (but it does work), so only rectangles have been supported as of now. Images also have to be manually selected in `+page.svelte` currently. These features should be added in the near future.
+This program attempts to approximate an image using geometry. This is still slightly work in progress (but it does work), so the user interface is non-existant. Currently, triangles and rectangles are supported. Images also have to be manually selected in `+page.svelte`. Features to change the algorithm parameters should be added in the near future.
 
 ## Setup
 
