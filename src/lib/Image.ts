@@ -66,12 +66,12 @@ export default class Image
             let r = t[i] - c[i]
             let g = t[i + 1] - c[i + 1]
             let b = t[i + 2] - c[i + 2]
-            let a = t[i + 3] - c[i + 3]
 
-            sum += r * r + g * g + b * b + a * a
+            sum += r * r + g * g + b * b
         }
 
-        return Math.sqrt(sum / t.length)
+        let n = this.width * this.height * 3
+        return Math.sqrt(sum / n)
     }
 
 }

@@ -81,12 +81,6 @@ export default class ImageApproximator
     private reset()
     {
         this.shape = Rectangle.random(this.width, this.height)
-        // switch (Random.int(3))
-        // {
-        //     case 0: this.shape = Triangle.random(this.width, this.height); break
-        //     case 1: this.shape = Rectangle.random(this.width, this.height); break
-        //     case 2: this.shape = Ellipse.random(this.width, this.height); break
-        // }
     }
 
     private start()
@@ -109,52 +103,40 @@ export default class ImageApproximator
     private handler!: number
     public run()
     {
-        // this.handler = window.requestAnimationFrame(this.run.bind(this))
-
-        let shape = Triangle.random(this.width, this.height)
-        // let triangle = new Triangle(new Vector2(40, 10), new Vector2(80, 70), new Vector2(10, 50), Color4.random())
-
-        for (let line of Scanline.clamp(shape.rasterize(), this.width, this.height))
+        this.handler = window.requestAnimationFrame(this.run.bind(this))
+        for (let n = 0; n < 500; n++)
         {
-            this.c.beginPath()
-            this.c.moveTo(line.start, line.y)
-            this.c.lineTo(line.end, line.y)
-            this.c.stroke()
+            switch (Random.int(3))
+            {
+                case 0: this.reset(); break
+                case 1: this.shape = this.shape.mutate(); break
+                case 2: this.shape = this.best.mutate(); break
+            }
+
+            this.image.renderIteration(this.shape)
+            let error = this.image.error(this.target)
+
+            if (error < this.error)
+            {
+                this.best = this.shape
+                this.error = error
+            }
+
+            if (this.error < this.previous)
+            {
+                this.i++
+                if (this.i > 5000)
+                {
+                    this.image.addShape(this.best)
+                    this.previous = this.error
+
+                    this.start()
+                    this.i = 0
+                }
+            }
         }
-
-        // for (let n = 0; n < 8; n++)
-        // {
-        //     switch (Random.int(3))
-        //     {
-        //         case 0: this.reset(); break
-        //         case 1: this.shape = this.shape.mutate(); break
-        //         case 2: this.shape = this.best.mutate(); break
-        //     }
-
-        //     this.image.renderIteration(this.shape)
-        //     let error = this.image.error(this.target)
-
-        //     if (error < this.error)
-        //     {
-        //         this.best = this.shape
-        //         this.error = error
-        //     }
-
-        //     if (this.error < this.previous)
-        //     {
-        //         this.i++
-        //         if (this.i > 5000)
-        //         {
-        //             this.image.addShape(this.best)
-        //             this.previous = this.error
-
-        //             this.start()
-        //             this.i = 0
-        //         }
-        //     }
-        // }
         
-        // console.log(this.image.shapes.length, this.i, this.error)
+        console.log(this.image.shapes.length, this.i, this.error)
     }
 
     public stop() { window.cancelAnimationFrame(this.handler) }
