@@ -1,5 +1,5 @@
 <canvas bind:this={canvas} />
-<img src="star.jpg" alt="" bind:this={image}>
+<img src="trees.jpg" alt="" bind:this={image}>
 <a href={data} download="result.png" on:click={onClick}>Export</a>
 
 <script lang="ts">

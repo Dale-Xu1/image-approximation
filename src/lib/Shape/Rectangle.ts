@@ -42,7 +42,7 @@ export default class Rectangle extends Shape
 
         return new Rectangle(position, a, w, h, color)
     }
-    
+
     public rasterize(): Raster
     {
         let a = this.position.add(new Vector2(-this.w / 2, -this.h / 2).rotate(this.a)).trunc()
