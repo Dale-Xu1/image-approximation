@@ -1,4 +1,4 @@
-import type { Scanline } from "../Image"
+import { Raster } from "../Image"
 import { Color4, Random, Vector2 } from "../Math"
 import Shape, { ANGLE_SD, DIMENSION_SD, MIN_WIDTH, POSITION_SD, RANGE } from "./Shape"
 
@@ -44,9 +44,9 @@ export default class Ellipse extends Shape
     }
 
 
-    public rasterize(): Scanline[]
+    public rasterize(): Raster
     {
-        return []
+        return new Raster([])
     }
 
     public render(c: CanvasRenderingContext2D): void

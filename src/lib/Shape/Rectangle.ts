@@ -1,4 +1,4 @@
-import type { Scanline } from "../Image"
+import { Raster, Scanline } from "../Image"
 import { Color4, Random, Vector2 } from "../Math"
 import Shape, { ANGLE_SD, DIMENSION_SD, MIN_WIDTH, POSITION_SD, RANGE } from "./Shape"
 
@@ -44,9 +44,53 @@ export default class Rectangle extends Shape
     }
 
 
-    public rasterize(): Scanline[]
+    
+    public rasterize(): Raster
     {
-        return []
+        let a = this.position.add(new Vector2(-this.w / 2, -this.h / 2).rotate(this.a)).trunc()
+        let b = this.position.add(new Vector2(-this.w / 2, this.h / 2).rotate(this.a)).trunc()
+        let c = this.position.add(new Vector2(this.w / 2, this.h / 2).rotate(this.a)).trunc()
+        let d = this.position.add(new Vector2(this.w / 2, -this.h / 2).rotate(this.a)).trunc()
+
+        let start = Math.min(Math.min(Math.min(a.y, b.y), c.y), d.y)
+        let end = Math.max(Math.max(Math.max(a.y, b.y), c.y), d.y)
+        let n = end - start + 1
+
+        let min: number[] = []
+        let max: number[] = []
+        for (let i = 0; i < n; i++)
+        {
+            min[i] = Infinity
+            max[i] = -Infinity
+        }
+
+        scanEdge(a, b)
+        scanEdge(b, c)
+        scanEdge(c, d)
+        scanEdge(d, a)
+        function scanEdge(a: Vector2, b: Vector2)
+        {
+            if (a.y > b.y) [a, b] = [b, a]
+            let s = (b.x - a.x) / (b.y - a.y)
+    
+            let x = a.x
+            for (let y = a.y; y <= b.y; y++)
+            {
+                let i = y - start
+                let v = Math.trunc(x)
+
+                if (v < min[i]) min[i] = v
+                if (v > max[i]) max[i] = v
+
+                x += s
+            }
+        }
+
+        // Convert min and max data to scanlines
+        let lines: Scanline[] = []
+        for (let i = 0; i < n; i++) lines.push(new Scanline(start + i, min[i], max[i]))
+
+        return new Raster(lines)
     }
 
     public render(c: CanvasRenderingContext2D): void

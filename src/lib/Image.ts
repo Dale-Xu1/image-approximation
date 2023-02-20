@@ -76,26 +76,42 @@ export default class Image
 
 }
 
-export class Scanline
+export class Raster
 {
 
-    public constructor(public readonly y: number, public readonly start: number, public readonly end: number) { }
+    public constructor(public readonly lines: Scanline[]) { }
+
 
     private static limit(x: number, min: number, max: number): number { return Math.min(Math.max(x, min), max) }
-    public static clamp(lines: Scanline[], width: number, height: number): Scanline[]
+    public clamp(width: number, height: number): Raster
     {
-        let result: Scanline[] = []
-        for (let line of lines)
+        let lines: Scanline[] = []
+        for (let line of this.lines)
         {
             if (line.y < 0 || line.y >= height) continue
             if (line.start >= width || line.end < 0) continue
 
-            result.push(new Scanline(line.y,
-                this.limit(line.start, 0, width - 1),
-                this.limit(line.end, 0, width - 1)))
+            lines.push(new Scanline(line.y,
+                Raster.limit(line.start, 0, width - 1),
+                Raster.limit(line.end, 0, width - 1)))
         }
 
-        return result
+        return new Raster(lines)
     }
+
+    public get area(): number
+    {
+        let area = 0
+        for (let line of this.lines) area += line.end - line.start + 1
+
+        return area
+    }
+
+}
+
+export class Scanline
+{
+
+    public constructor(public readonly y: number, public readonly start: number, public readonly end: number) { }
 
 }

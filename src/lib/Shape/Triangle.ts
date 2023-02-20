@@ -1,4 +1,4 @@
-import { Scanline } from "$lib/Image"
+import { Raster, Scanline } from "$lib/Image"
 import { Color4, Random, Vector2 } from "../Math"
 import Shape, { ANGLE_SD, DIMENSION_SD, MIN_WIDTH, POSITION_SD, RANGE } from "./Shape"
 
@@ -78,7 +78,7 @@ export default class Triangle extends Shape
     }
 
 
-    public rasterize(): Scanline[]
+    public rasterize(): Raster
     {
         // Order vertices in order of height with a being the highest
         let a = this.a.trunc(), b = this.b.trunc(), c = this.c.trunc()
@@ -86,13 +86,16 @@ export default class Triangle extends Shape
         if (a.y > c.y) [a, c] = [c, a]
         if (b.y > c.y) [b, c] = [c, b]
 
-        if (b.y === c.y) return this.fillFlatBottom(a, b, c)
-        else if (a.y === b.y) return this.fillFlatTop(a, b, c)
+        let lines: Scanline[]
+        if (b.y === c.y) lines = this.fillFlatBottom(a, b, c)
+        else if (a.y === b.y) lines = this.fillFlatTop(a, b, c)
         else
         {
             let d = new Vector2(Math.trunc(a.x + (b.y - a.y) / (c.y - a.y) * (c.x - a.x)), b.y)
-            return this.fillFlatBottom(a, b, d).concat(this.fillFlatTop(b, d, c))
+            lines = this.fillFlatBottom(a, b, d).concat(this.fillFlatTop(b, d, c))
         }
+
+        return new Raster(lines)
     }
 
     private fillFlatBottom(a: Vector2, b: Vector2, c: Vector2): Scanline[]

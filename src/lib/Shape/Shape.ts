@@ -1,4 +1,4 @@
-import type { Scanline } from "$lib/Image"
+import type { Raster } from "$lib/Image"
 import { Color4, Random } from "../Math"
 
 export const RANGE = 120
@@ -17,7 +17,7 @@ export default abstract class Shape
 
 
     public abstract mutate(): Shape
-    public abstract rasterize(): Scanline[]
+    public abstract rasterize(): Raster
     public abstract render(c: CanvasRenderingContext2D): void
 
     private clamp(x: number): number { return Math.min(Math.max(x, 0), 1) }
@@ -33,31 +33,3 @@ export default abstract class Shape
     }
 
 }
-
-// export class Bezier extends Shape
-// {
-
-//     // TODO: Bezier curves
-//     public constructor(color: Color4) { super(color) }
-
-//     public static random(): Bezier
-//     {
-//         let color = Color4.random()
-//         return new Bezier(color)
-//     }
-
-
-//     public mutate(): Bezier
-//     {
-//         let color = this.color
-//         color = this.mutateColor()
-
-//         return new Bezier(color)
-//     }
-
-//     public render(c: CanvasRenderingContext2D): void
-//     {
-        
-//     }
-
-// }
