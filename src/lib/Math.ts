@@ -1,3 +1,5 @@
+const ALPHA = 0.8
+
 export class Random
 {
 
@@ -62,7 +64,7 @@ export class Color4
 
     public static random(): Color4
     {
-        return new Color4(Math.random(), Math.random(), Math.random(), 0.8)
+        return new Color4(Math.random(), Math.random(), Math.random(), ALPHA)
     }
 
 

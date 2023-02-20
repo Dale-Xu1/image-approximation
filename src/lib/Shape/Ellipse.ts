@@ -5,8 +5,8 @@ import Shape, { ANGLE_SD, DIMENSION_SD, MIN_WIDTH, POSITION_SD, RANGE } from "./
 export default class Ellipse extends Shape
 {
 
-    public constructor(private readonly position: Vector2, private readonly a: number,
-        private readonly w: number, private readonly h: number, color: Color4) { super(color) }
+    public constructor(public readonly position: Vector2, public readonly a: number,
+        public readonly w: number, public readonly h: number, color: Color4) { super(color) }
 
     public static random(width: number, height: number): Ellipse
     {

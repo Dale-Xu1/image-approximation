@@ -1,9 +1,10 @@
-import Image, { Scanline } from "./Image"
-import { Color4, Random, Vector2 } from "./Math"
+import Image, { Raster } from "./Image"
+import { Color4, Random } from "./Math"
 import type Shape from "./Shape/Shape"
 
 import Rectangle from "./Shape/Rectangle"
 import Triangle from "./Shape/Triangle"
+import { MIN_PIXELS } from "./Shape/Shape"
 
 const MAX_DIMENSION = 256
 const EXPORT_DIMENSION = 3840
@@ -16,8 +17,6 @@ export default class ImageApproximator
     private readonly width: number
     private readonly height: number
 
-    private c: CanvasRenderingContext2D
-
 
     public constructor(canvas: HTMLCanvasElement, image: HTMLImageElement)
     {
@@ -29,7 +28,6 @@ export default class ImageApproximator
         this.height = canvas.height = image.height = height
 
         let c = canvas.getContext("2d")!
-        this.c = c // TODO: REMOVE THIS
 
         // Create image with background as the average color
         this.target = this.resizeImageData(image, width, height)
@@ -78,25 +76,25 @@ export default class ImageApproximator
     private readonly image: Image
     private readonly target: ImageData
 
-    private reset()
-    {
-        this.shape = Rectangle.random(this.width, this.height)
-    }
-
+    private reset(): Shape{ return Rectangle.random(this.width, this.height) }
     private start()
     {
-        this.reset()
-        this.best = this.shape
+        if (this.best) this.image.shapes.push(this.best)
 
-        this.image.renderIteration(this.shape)
-        this.error = this.image.error(this.target)
+        this.image.render()
+        this.previous = this.image.error(this.target)
+
+        this.best = this.shape = this.reset()
+
+        let raster = this.shape.rasterize().clamp(this.width, this.height)
+        this.error = this.image.partial(this.target, raster, this.shape.color, this.previous)
     }
 
-    private shape: Shape = null!
-    private best: Shape = null! // TODO: Bug where best shape becomes shape not within image
+    private shape!: Shape
+    private best!: Shape
 
-    private previous: number = Infinity
-    private error: number = Infinity
+    private previous!: number
+    private error!: number
 
     private i: number = 0
 
@@ -104,39 +102,46 @@ export default class ImageApproximator
     public run()
     {
         this.handler = window.requestAnimationFrame(this.run.bind(this))
-        for (let n = 0; n < 500; n++)
+        for (let n = 0; n < 800; n++)
         {
-            switch (Random.int(3))
-            {
-                case 0: this.reset(); break
-                case 1: this.shape = this.shape.mutate(); break
-                case 2: this.shape = this.best.mutate(); break
-            }
+            let [shape, raster] = this.mutate()
+            let error = this.image.partial(this.target, raster, shape.color, this.previous)
 
-            this.image.renderIteration(this.shape)
-            let error = this.image.error(this.target)
-
+            this.shape = shape
             if (error < this.error)
             {
-                this.best = this.shape
+                this.best = shape
                 this.error = error
             }
 
             if (this.error < this.previous)
             {
                 this.i++
-                if (this.i > 5000)
+                if (this.i > 8000)
                 {
-                    this.image.addShape(this.best)
-                    this.previous = this.error
-
                     this.start()
                     this.i = 0
                 }
             }
         }
-        
+
         console.log(this.image.shapes.length, this.i, this.error)
+    }
+
+    private mutate(): [Shape, Raster]
+    {
+        let shape!: Shape
+        switch (Random.int(3))
+        {
+            case 0: shape = this.reset(); break
+            case 1: shape = this.shape.mutate(); break
+            case 2: shape = this.best.mutate(); break
+        }
+
+        let raster = shape.rasterize().clamp(this.width, this.height)
+        if (raster.area < MIN_PIXELS) return this.mutate()
+
+        return [shape, raster]
     }
 
     public stop() { window.cancelAnimationFrame(this.handler) }

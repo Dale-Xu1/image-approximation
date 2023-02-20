@@ -5,7 +5,7 @@ import Shape, { ANGLE_SD, DIMENSION_SD, MIN_WIDTH, POSITION_SD, RANGE } from "./
 export default class Triangle extends Shape
 {
 
-    public constructor(private readonly a: Vector2, private readonly b: Vector2, private readonly c: Vector2,
+    public constructor(public readonly a: Vector2, public readonly b: Vector2, public readonly c: Vector2,
         color: Color4) { super(color) }
 
     public static random(width: number, height: number): Triangle
