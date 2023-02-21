@@ -1,5 +1,5 @@
 import Image, { Raster } from "./Image"
-import { Color4, Random } from "./Math"
+import { Color4, Random } from "./Shape/Math"
 import type Shape from "./Shape/Shape"
 import Constants from "./Constants"
 
@@ -19,7 +19,7 @@ export default class ImageApproximator
     {
         // Calculate canvas dimensions based on original aspect ratio
         this.ratio = image.width / image.height
-        let [width, height] = this.dimensions(Constants.MAX_DIMENSION, this.ratio)
+        let [width, height] = Image.dimensions(Constants.MAX_DIMENSION, this.ratio)
 
         this.width = canvas.width = image.width = width
         this.height = canvas.height = image.height = height
@@ -31,12 +31,6 @@ export default class ImageApproximator
         this.image = new Image(c, width, height, this.averageColor(this.target))
 
         this.start()
-    }
-
-    private dimensions(max: number, ratio: number): [number, number]
-    {
-        if (ratio > 1) return [max, Math.floor(max / ratio)]
-        else return [Math.floor(max * ratio), max]
     }
 
     private resizeImageData(image: HTMLImageElement, width: number, height: number): ImageData
@@ -145,13 +139,10 @@ export default class ImageApproximator
 
     public export(dimension: number): string
     {
-        let [width, height] = this.dimensions(dimension, this.ratio)
+        let [width, height] = Image.dimensions(dimension, this.ratio)
         return this.image.export(width, height)
     }
 
-    public exportJSON(): string
-    {
-        return "data:text/json;charset=utf-8," + window.encodeURIComponent(JSON.stringify(this.image.shapes))
-    }
+    public exportJSON(): string { return JSON.stringify(this.image.shapes) }
 
 }

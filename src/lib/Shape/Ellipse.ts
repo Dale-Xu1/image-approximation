@@ -1,6 +1,6 @@
 import Constants from "../Constants"
 import { Raster } from "../Image"
-import { Color4, Random, Vector2 } from "../Math"
+import { Color4, Random, Vector2 } from "./Math"
 import Shape from "./Shape"
 
 export default class Ellipse extends Shape

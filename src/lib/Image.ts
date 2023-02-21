@@ -1,4 +1,4 @@
-import type { Color4 } from "./Math"
+import type { Color4 } from "./Shape/Math"
 import type Shape from "./Shape/Shape"
 
 export default class Image
@@ -9,6 +9,12 @@ export default class Image
     public constructor(private readonly c: CanvasRenderingContext2D,
         private readonly width: number, private readonly height: number,
         public readonly background: Color4) { }
+
+    public static dimensions(max: number, ratio: number): [number, number]
+    {
+        if (ratio > 1) return [max, Math.floor(max / ratio)]
+        else return [Math.floor(max * ratio), max]
+    }
 
 
     public get data() { return this.c.getImageData(0, 0, this.width, this.height) }

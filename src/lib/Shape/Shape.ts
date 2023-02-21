@@ -1,6 +1,6 @@
 import Constants from "../Constants"
 import type { Raster } from "../Image"
-import { Color4, Random } from "../Math"
+import { Color4, Random } from "./Math"
 
 export default abstract class Shape
 {

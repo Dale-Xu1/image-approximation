@@ -1,123 +1,80 @@
-<div class="main">
-    <canvas bind:this={canvas} />
-    <img src="trees.jpg" alt="" bind:this={target}>
-
-    <form>
-        <div>
-            <input type="button"
-                disabled={n >= max}
-                value={running ? "Pause" : "Start"}
-                on:click={toggle}>
-            <input type="button" value="Export" on:click={exportImage}>
-            <input type="button" value="Export JSON" on:click={exportJSON}>
-        </div>
-        <div>
-            <label for="max">Maximum shapes:</label><br>
-            <input id="max" type="number" bind:value={max}>
-        </div>
-        <div>
-            <label for="dimension">Export dimension:</label><br>
-            <input id="dimension" type="number" bind:value={dimension}>
-        </div>
-    </form>
-</div>
+{#if target}
+    <Main />
+{:else}
+    <div class="main">
+        <input type="file" accept="image/*" bind:files={files} on:change={select} />
+    </div>
+{/if}
 
 <script lang="ts">
-import { onMount } from "svelte"
-import ImageApproximator from "../lib/ImageApproximator"
+import Constants from "../lib/Constants"
+import Image from "../lib/Image"
+import Main from "../lib/Main.svelte"
 
-// TODO: File selection
+let files: FileList
+let target: ImageData | null = null
 
-let canvas: HTMLCanvasElement
-let target: HTMLImageElement
-
-let approximator: ImageApproximator
-$: image = approximator?.image
-
-onMount(() =>
+async function select()
 {
-    approximator = new ImageApproximator(canvas, target)
-    return stop
-})
+    let data = await readFile(files[0])
+    let image = await toImage(data)
 
-let n = 0
-let max = 300
+    // Calculate canvas dimensions based on original aspect ratio
+    let ratio = image.width / image.height
+    let [width, height] = Image.dimensions(Constants.MAX_DIMENSION, ratio)
 
-let handler: number
-function run()
-{
-    handler = window.requestAnimationFrame(run)
-
-    for (let n = 0; n < 800; n++) approximator.run()
-
-    n = image.shapes.length
-    if (n >= max) stop()
-
-    console.log(n, approximator.i, approximator.error)
+    target = resizeImageData(image, width, height)
+    console.log(target)
 }
 
-let running = false
-function toggle()
+function resizeImageData(image: HTMLImageElement, width: number, height: number): ImageData
 {
-    if (running) stop()
-    else
+    // Create intermediate canvas and draw image onto it
+    let canvas = document.createElement("canvas")
+    let c = canvas.getContext("2d")!
+
+    canvas.width = width
+    canvas.height = height
+
+    // Resize image to width and height
+    c.drawImage(image, 0, 0, width, height)
+    return c.getImageData(0, 0, width, height)
+}
+
+
+async function readFile(file: File): Promise<string>
+{
+    return new Promise((res, rej) =>
     {
-        running = true
-        run()
-    }
+        const reader = new FileReader()
+
+        // Resolve promise with file data
+        reader.onload = () => res(reader.result as string)
+        reader.onerror = rej
+
+        reader.readAsDataURL(file)
+    })
 }
 
-function stop()
+async function toImage(data: string): Promise<HTMLImageElement>
 {
-    window.cancelAnimationFrame(handler)
-    running = false
-}
+    return new Promise((res, _) =>
+    {
+        const image = new window.Image()
 
-let dimension = 3840
-function exportImage()
-{
-    let a = document.createElement("a")
-    a.download = "result.png"
-    a.href = approximator.export(dimension)
-
-    a.click()
-}
-
-function exportJSON()
-{
-    let a = document.createElement("a")
-    a.download = "result.json"
-    a.href = approximator.exportJSON()
-
-    a.click()
+        image.src = data
+        image.onload = () => res(image)
+    })
 }
 
 </script>
 
 <style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, Helvetica, sans-serif;
-}
-
 .main {
     padding: 12px;
 }
 
-form, input {
-    font-size: 14px;
-}
-
-form > div {
-    margin-top: 10px;
-}
-
-input {
-    display: inline-block;
-    margin-top: 4px;
+input::file-selector-button {
     padding: 4px;
 }
-
 </style>
