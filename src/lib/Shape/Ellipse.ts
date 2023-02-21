@@ -46,7 +46,7 @@ export default class Ellipse extends Shape
 
     public rasterize(): Raster
     {
-        return new Raster([])
+        return new Raster([]) // TODO: Ellipse raster
     }
 
     public render(c: CanvasRenderingContext2D): void

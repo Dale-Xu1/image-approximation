@@ -73,10 +73,10 @@ export default class ImageApproximator
     }
 
 
-    private readonly image: Image
+    public readonly image: Image
     private readonly target: ImageData
 
-    private reset(): Shape{ return Rectangle.random(this.width, this.height) }
+    private reset(): Shape { return Rectangle.random(this.width, this.height) }
     private start()
     {
         if (this.best) this.image.shapes.push(this.best)
@@ -94,38 +94,30 @@ export default class ImageApproximator
     private best!: Shape
 
     private previous!: number
-    private error!: number
+    public error!: number
 
-    private i: number = 0
-
-    private handler!: number
+    public i: number = 0
     public run()
     {
-        this.handler = window.requestAnimationFrame(this.run.bind(this))
-        for (let n = 0; n < 800; n++)
+        let [shape, raster] = this.mutate()
+        let error = this.image.partial(this.target, raster, shape.color, this.previous)
+
+        this.shape = shape
+        if (error < this.error)
         {
-            let [shape, raster] = this.mutate()
-            let error = this.image.partial(this.target, raster, shape.color, this.previous)
-
-            this.shape = shape
-            if (error < this.error)
-            {
-                this.best = shape
-                this.error = error
-            }
-
-            if (this.error < this.previous)
-            {
-                this.i++
-                if (this.i > 8000)
-                {
-                    this.start()
-                    this.i = 0
-                }
-            }
+            this.best = shape
+            this.error = error
         }
 
-        console.log(this.image.shapes.length, this.i, this.error)
+        if (this.error < this.previous)
+        {
+            this.i++
+            if (this.i > 8000)
+            {
+                this.start()
+                this.i = 0
+            }
+        }
     }
 
     private mutate(): [Shape, Raster]
@@ -143,9 +135,6 @@ export default class ImageApproximator
 
         return [shape, raster]
     }
-
-    public stop() { window.cancelAnimationFrame(this.handler) }
-
 
     public export(): string
     {
