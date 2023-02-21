@@ -2,7 +2,9 @@
 
 ## Overview
 
-This program attempts to approximate an image using geometry. This is still slightly work in progress (but it does work), so the user interface is non-existant. Currently, triangles and rectangles are supported. Images also have to be manually selected in `+page.svelte`. Features to change the algorithm parameters should be added in the near future.
+This program attempts to approximate an image using geometry. This is still slightly work in progress, so only rectangles have been supported as of now (you can manually change the code to use triangles, but ellipses don't work).
+
+The way the algorithm works is by generating a random shape and repeatedly applying mutations to it. While it does this, it keeps track of the shape that best minimizes the error function (which computes how close the result is to the original image). After a certain amount of iterations, it moves onto the next shape.
 
 ## Setup
 
