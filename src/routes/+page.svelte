@@ -1,30 +1,27 @@
-{#if target}
-    <Main />
-{:else}
-    <div class="main">
-        <input type="file" accept="image/*" bind:files={files} on:change={select} />
-    </div>
-{/if}
-
 <script lang="ts">
-import Constants from "../lib/Constants"
-import Image from "../lib/Image"
 import Main from "../lib/Main.svelte"
 
+import Constants from "../lib/Constants"
+import Image from "../lib/Image"
+
 let files: FileList
+
 let target: ImageData | null = null
+let reference: HTMLImageElement
 
 async function select()
 {
     let data = await readFile(files[0])
-    let image = await toImage(data)
+    reference = await toImage(data)
 
     // Calculate canvas dimensions based on original aspect ratio
-    let ratio = image.width / image.height
+    let ratio = reference.width / reference.height
     let [width, height] = Image.dimensions(Constants.MAX_DIMENSION, ratio)
 
-    target = resizeImageData(image, width, height)
-    console.log(target)
+    reference.width = width
+    reference.height = height
+
+    target = resizeImageData(reference, width, height)
 }
 
 function resizeImageData(image: HTMLImageElement, width: number, height: number): ImageData
@@ -46,7 +43,7 @@ async function readFile(file: File): Promise<string>
 {
     return new Promise((res, rej) =>
     {
-        const reader = new FileReader()
+        let reader = new FileReader()
 
         // Resolve promise with file data
         reader.onload = () => res(reader.result as string)
@@ -60,7 +57,7 @@ async function toImage(data: string): Promise<HTMLImageElement>
 {
     return new Promise((res, _) =>
     {
-        const image = new window.Image()
+        let image = document.createElement("img")
 
         image.src = data
         image.onload = () => res(image)
@@ -68,6 +65,14 @@ async function toImage(data: string): Promise<HTMLImageElement>
 }
 
 </script>
+
+{#if target}
+    <Main target={target} reference={reference} />
+{:else}
+    <div class="main">
+        <input type="file" accept="image/*" bind:files={files} on:change={select} />
+    </div>
+{/if}
 
 <style>
 .main {

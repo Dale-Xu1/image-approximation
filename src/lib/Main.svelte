@@ -1,42 +1,21 @@
-<div class="main">
-    <canvas bind:this={canvas} />
-    <img src="trees.jpg" alt="" bind:this={target}>
-
-    <form>
-        <div>
-            <input type="button"
-                disabled={n >= max}
-                value={running ? "Pause" : "Start"}
-                on:click={toggle}>
-            <input type="button" value="Export" on:click={exportImage}>
-            <input type="button" value="Export JSON" on:click={exportJSON}>
-        </div>
-        <div>
-            <label for="max">Maximum shapes:</label><br>
-            <input id="max" type="number" bind:value={max}>
-        </div>
-        <div>
-            <label for="dimension">Export dimension:</label><br>
-            <input id="dimension" type="number" bind:value={dimension}>
-        </div>
-    </form>
-</div>
-
 <script lang="ts">
 import { onMount } from "svelte"
 import ImageApproximator from "../lib/ImageApproximator"
 
-// TODO: File selection
+export let target: ImageData
+export let reference: HTMLImageElement
 
+let main: HTMLDivElement
 let canvas: HTMLCanvasElement
-let target: HTMLImageElement
 
 let approximator: ImageApproximator
 $: image = approximator?.image
 
 onMount(() =>
 {
+    main.prepend(reference)
     approximator = new ImageApproximator(canvas, target)
+
     return stop
 })
 
@@ -94,6 +73,28 @@ function exportJSON()
 
 </script>
 
+<div class="main" bind:this={main}>
+    <canvas bind:this={canvas} />
+    <form>
+        <div>
+            <input type="button"
+                disabled={n >= max}
+                value={running ? "Pause" : "Start"}
+                on:click={toggle}>
+            <input type="button" value="Export" on:click={exportImage}>
+            <input type="button" value="Export JSON" on:click={exportJSON}>
+        </div>
+        <div>
+            <label for="max">Maximum shapes:</label><br>
+            <input id="max" type="number" bind:value={max}>
+        </div>
+        <div>
+            <label for="dimension">Export dimension:</label><br>
+            <input id="dimension" type="number" bind:value={dimension}>
+        </div>
+    </form>
+</div>
+
 <style>
 * {
     margin: 0;
@@ -104,6 +105,10 @@ function exportJSON()
 
 .main {
     padding: 12px;
+}
+
+canvas {
+    margin-left: 8px;
 }
 
 form, input {

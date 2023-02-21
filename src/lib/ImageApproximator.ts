@@ -15,41 +15,23 @@ export default class ImageApproximator
     private readonly height: number
 
 
-    public constructor(canvas: HTMLCanvasElement, image: HTMLImageElement)
+    public constructor(canvas: HTMLCanvasElement, target: ImageData)
     {
-        // Calculate canvas dimensions based on original aspect ratio
-        this.ratio = image.width / image.height
-        let [width, height] = Image.dimensions(Constants.MAX_DIMENSION, this.ratio)
+        this.target = target
 
-        this.width = canvas.width = image.width = width
-        this.height = canvas.height = image.height = height
+        this.width = canvas.width = target.width
+        this.height = canvas.height = target.height
+        this.ratio = this.width / this.height
 
         let c = canvas.getContext("2d")!
-
-        // Create image with background as the average color
-        this.target = this.resizeImageData(image, width, height)
-        this.image = new Image(c, width, height, this.averageColor(this.target))
+        this.image = new Image(c, this.width, this.height, this.averageColor(this.target))
 
         this.start()
     }
 
-    private resizeImageData(image: HTMLImageElement, width: number, height: number): ImageData
+    private averageColor(target: ImageData): Color4
     {
-        // Create intermediate canvas and draw image onto it
-        let canvas = document.createElement("canvas")
-        let c = canvas.getContext("2d")!
-
-        canvas.width = width
-        canvas.height = height
-
-        // Resize image to width and height
-        c.drawImage(image, 0, 0, width, height)
-        return c.getImageData(0, 0, width, height)
-    }
-
-    private averageColor(image: ImageData): Color4
-    {
-        let data = image.data
+        let data = target.data
         let r = 0, g = 0, b = 0
 
         for (let i = 0; i < data.length; i += 4)
