@@ -1,13 +1,10 @@
 import Image, { Raster } from "./Image"
 import { Color4, Random } from "./Math"
 import type Shape from "./Shape/Shape"
+import Constants from "./Constants"
 
 import Rectangle from "./Shape/Rectangle"
 import Triangle from "./Shape/Triangle"
-import { MIN_PIXELS } from "./Shape/Shape"
-
-const MAX_DIMENSION = 256
-const EXPORT_DIMENSION = 3840
 
 export default class ImageApproximator
 {
@@ -22,7 +19,7 @@ export default class ImageApproximator
     {
         // Calculate canvas dimensions based on original aspect ratio
         this.ratio = image.width / image.height
-        let [width, height] = this.dimensions(MAX_DIMENSION, this.ratio)
+        let [width, height] = this.dimensions(Constants.MAX_DIMENSION, this.ratio)
 
         this.width = canvas.width = image.width = width
         this.height = canvas.height = image.height = height
@@ -76,7 +73,6 @@ export default class ImageApproximator
     public readonly image: Image
     private readonly target: ImageData
 
-    private reset(): Shape { return Rectangle.random(this.width, this.height) }
     private start()
     {
         if (this.best) this.image.shapes.push(this.best)
@@ -84,9 +80,9 @@ export default class ImageApproximator
         this.image.render()
         this.previous = this.image.error(this.target)
 
-        this.best = this.shape = this.reset()
+        let [shape, raster] = this.reset()
+        this.best = this.shape = shape
 
-        let raster = this.shape.rasterize().clamp(this.width, this.height)
         this.error = this.image.partial(this.target, raster, this.shape.color, this.previous)
     }
 
@@ -112,7 +108,7 @@ export default class ImageApproximator
         if (this.error < this.previous)
         {
             this.i++
-            if (this.i > 8000)
+            if (this.i > Constants.TRIANGLE_ITERATIONS)
             {
                 this.start()
                 this.i = 0
@@ -120,26 +116,42 @@ export default class ImageApproximator
         }
     }
 
+    private reset(): [Shape, Raster]
+    {
+        let shape = Rectangle.random(this.width, this.height)
+
+        let raster = shape.rasterize().clamp(this.width, this.height)
+        if (raster.area < Constants.MIN_PIXELS) return this.reset()
+
+        return [shape, raster]
+    }
+
     private mutate(): [Shape, Raster]
     {
         let shape!: Shape
         switch (Random.int(3))
         {
-            case 0: shape = this.reset(); break
+            case 0: return this.reset()
             case 1: shape = this.shape.mutate(); break
             case 2: shape = this.best.mutate(); break
         }
 
         let raster = shape.rasterize().clamp(this.width, this.height)
-        if (raster.area < MIN_PIXELS) return this.mutate()
+        if (raster.area < Constants.MIN_PIXELS) return this.mutate()
 
         return [shape, raster]
     }
 
-    public export(): string
+
+    public export(dimension: number): string
     {
-        let [width, height] = this.dimensions(EXPORT_DIMENSION, this.ratio)
+        let [width, height] = this.dimensions(dimension, this.ratio)
         return this.image.export(width, height)
+    }
+
+    public exportJSON(): string
+    {
+        return "data:text/json;charset=utf-8," + window.encodeURIComponent(JSON.stringify(this.image.shapes))
     }
 
 }

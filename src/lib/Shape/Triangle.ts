@@ -1,6 +1,7 @@
-import { Raster, Scanline } from "$lib/Image"
+import Constants from "../Constants"
+import { Raster, Scanline } from "../Image"
 import { Color4, Random, Vector2 } from "../Math"
-import Shape, { ANGLE_SD, DIMENSION_SD, MIN_WIDTH, POSITION_SD, RANGE } from "./Shape"
+import Shape from "./Shape"
 
 export default class Triangle extends Shape
 {
@@ -11,11 +12,11 @@ export default class Triangle extends Shape
     public static random(width: number, height: number): Triangle
     {
         let position = Vector2.random(width, height)
-        let offset = new Vector2(RANGE / 2, RANGE / 2)
+        let offset = new Vector2(Constants.RANGE / 2, Constants.RANGE / 2)
 
-        let a = position.add(Vector2.random(RANGE, RANGE)).sub(offset)
-        let b = position.add(Vector2.random(RANGE, RANGE)).sub(offset)
-        let c = position.add(Vector2.random(RANGE, RANGE)).sub(offset)
+        let a = position.add(Vector2.random(Constants.RANGE, Constants.RANGE)).sub(offset)
+        let b = position.add(Vector2.random(Constants.RANGE, Constants.RANGE)).sub(offset)
+        let c = position.add(Vector2.random(Constants.RANGE, Constants.RANGE)).sub(offset)
 
         // Reject if triangle is too thin
         if (this.thin(a, b, c)) return Triangle.random(width, height)
@@ -30,16 +31,16 @@ export default class Triangle extends Shape
         const max = Math.max(Vector2.dist(a, b), Vector2.dist(b, c), Vector2.dist(c, a))
         const area = a.x * (b.y - c.y) + b.x * (c.y - a.y) + c.x * (a.y - b.y)
 
-        const s = area / (2 * MIN_WIDTH)
+        const s = area / (2 * Constants.MIN_WIDTH)
         return s < max
     }
 
 
     private shift(): Triangle
     {
-        let a = this.a.add(Vector2.normal(DIMENSION_SD))
-        let b = this.b.add(Vector2.normal(DIMENSION_SD))
-        let c = this.c.add(Vector2.normal(DIMENSION_SD))
+        let a = this.a.add(Vector2.normal(Constants.DIMENSION_SD))
+        let b = this.b.add(Vector2.normal(Constants.DIMENSION_SD))
+        let c = this.c.add(Vector2.normal(Constants.DIMENSION_SD))
 
         // Reject if triangle is too thin
         if (Triangle.thin(a, b, c)) return this.shift()
@@ -53,7 +54,7 @@ export default class Triangle extends Shape
         {
             case 0:
             {
-                let d = Vector2.normal(POSITION_SD)
+                let d = Vector2.normal(Constants.POSITION_SD)
 
                 a = a.add(d)
                 b = b.add(d)
@@ -64,7 +65,7 @@ export default class Triangle extends Shape
             case 2:
             {
                 let center = a.add(b).add(c).div(3)
-                let d = Random.normal(ANGLE_SD)
+                let d = Random.normal(Constants.ANGLE_SD)
 
                 a = a.sub(center).rotate(d).add(center)
                 b = b.sub(center).rotate(d).add(center)
