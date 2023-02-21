@@ -1,20 +1,21 @@
 <script lang="ts">
 import { onMount } from "svelte"
-import ImageApproximator from "../lib/ImageApproximator"
+import ImageApproximator, { type Generator } from "../lib/ImageApproximator"
 
 export let target: ImageData
 export let reference: HTMLImageElement
+
+export let generator: Generator
 
 let main: HTMLDivElement
 let canvas: HTMLCanvasElement
 
 let approximator: ImageApproximator
-$: image = approximator?.image
 
 onMount(() =>
 {
     main.prepend(reference)
-    approximator = new ImageApproximator(canvas, target)
+    approximator = new ImageApproximator(canvas, target, generator)
 
     return stop
 })
@@ -29,7 +30,7 @@ function run()
 
     for (let n = 0; n < 800; n++) approximator.run()
 
-    n = image.shapes.length
+    n = approximator.image.shapes.length
     if (n >= max) stop()
 
     console.log(n, approximator.i, approximator.error)
@@ -96,23 +97,12 @@ function exportJSON()
 </div>
 
 <style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, Helvetica, sans-serif;
-}
-
 .main {
-    padding: 12px;
+    padding: 20px;
 }
 
 canvas {
     margin-left: 8px;
-}
-
-form, input {
-    font-size: 14px;
 }
 
 form > div {

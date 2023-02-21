@@ -3,11 +3,23 @@ import Main from "../lib/Main.svelte"
 
 import Constants from "../lib/Constants"
 import Image from "../lib/Image"
+import type { Generator } from "$lib/ImageApproximator"
+
+import Rectangle from "../lib/Shape/Rectangle"
+import Triangle from "$lib/Shape/Triangle"
+
+enum Shape
+{
+    TRIANGLE,
+    RECTANGLE
+}
 
 let files: FileList
 
 let target: ImageData | null = null
 let reference: HTMLImageElement
+
+let shape: Shape = Shape.RECTANGLE
 
 async function select()
 {
@@ -22,6 +34,15 @@ async function select()
     reference.height = height
 
     target = resizeImageData(reference, width, height)
+}
+
+function decodeGenerator(shape: Shape): Generator
+{
+    switch (shape)
+    {
+        case Shape.TRIANGLE: return Triangle.random
+        case Shape.RECTANGLE: return Rectangle.random
+    }
 }
 
 function resizeImageData(image: HTMLImageElement, width: number, height: number): ImageData
@@ -67,19 +88,43 @@ async function toImage(data: string): Promise<HTMLImageElement>
 </script>
 
 {#if target}
-    <Main target={target} reference={reference} />
+    <Main {target} {reference} generator={decodeGenerator(shape)} />
 {:else}
     <div class="main">
+        <div>
+            <label>
+                <input type="radio" bind:group={shape} value={Shape.TRIANGLE}>
+                Triangle
+            </label>
+            <label>
+                <input type="radio"  bind:group={shape} value={Shape.RECTANGLE}>
+                Rectangle
+            </label>
+        </div>
         <input type="file" accept="image/*" bind:files={files} on:change={select} />
     </div>
 {/if}
 
 <style>
+:global(*) {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+}
+
 .main {
-    padding: 12px;
+    padding: 20px;
+}
+
+.main > div {
+    margin-bottom: 8px;
 }
 
 input::file-selector-button {
     padding: 4px;
 }
+
 </style>

@@ -3,8 +3,10 @@ import { Color4, Random } from "./Shape/Math"
 import type Shape from "./Shape/Shape"
 import Constants from "./Constants"
 
-import Rectangle from "./Shape/Rectangle"
-import Triangle from "./Shape/Triangle"
+export interface Generator
+{
+    (width: number, height: number): Shape
+}
 
 export default class ImageApproximator
 {
@@ -15,9 +17,10 @@ export default class ImageApproximator
     private readonly height: number
 
 
-    public constructor(canvas: HTMLCanvasElement, target: ImageData)
+    public constructor(canvas: HTMLCanvasElement, target: ImageData, generator: Generator)
     {
         this.target = target
+        this.generator = generator
 
         this.width = canvas.width = target.width
         this.height = canvas.height = target.height
@@ -48,6 +51,8 @@ export default class ImageApproximator
 
     public readonly image: Image
     private readonly target: ImageData
+
+    private readonly generator: Generator
 
     private start()
     {
@@ -94,7 +99,7 @@ export default class ImageApproximator
 
     private reset(): [Shape, Raster]
     {
-        let shape = Rectangle.random(this.width, this.height)
+        let shape = this.generator(this.width, this.height)
 
         let raster = shape.rasterize().clamp(this.width, this.height)
         if (raster.area < Constants.MIN_PIXELS) return this.reset()

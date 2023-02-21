@@ -19,7 +19,7 @@ export default class Triangle extends Shape
         let c = position.add(Vector2.random(Constants.RANGE, Constants.RANGE)).sub(offset)
 
         // Reject if triangle is too thin
-        if (this.thin(a, b, c)) return Triangle.random(width, height)
+        if (Triangle.thin(a, b, c)) return Triangle.random(width, height)
 
         let color = Color4.random()
         return new Triangle(a, b, c, color)

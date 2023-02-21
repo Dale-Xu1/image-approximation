@@ -1,4 +1,4 @@
-const ALPHA = 0.8
+import Constants from "../Constants"
 
 export class Random
 {
@@ -64,7 +64,7 @@ export class Color4
 
     public static random(): Color4
     {
-        return new Color4(Math.random(), Math.random(), Math.random(), ALPHA)
+        return new Color4(Math.random(), Math.random(), Math.random(), Constants.ALPHA)
     }
 
 
