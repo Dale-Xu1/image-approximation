@@ -4,7 +4,7 @@ export class Random
 {
 
     public static next(range: number = 1): number { return Math.random() * range }
-    public static int(range: number): number { return Math.floor(Random.next(range)) }
+    public static int(range: number): number { return Math.trunc(Random.next(range)) }
 
     public static normal(sd: number): number
     {
