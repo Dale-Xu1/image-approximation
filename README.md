@@ -28,6 +28,8 @@ npm run dev
 
 ![w300](https://user-images.githubusercontent.com/69087617/219879590-c6501947-ccab-49c5-9a2e-bdb398b86f93.png)
 
+![i](https://user-images.githubusercontent.com/69087617/220656360-34ab2ce5-ea9d-47fb-be76-fca7879700ab.png)
+
 ![t3](https://user-images.githubusercontent.com/69087617/219907978-87a44f99-a2c0-4c76-9ddd-d48ddc78fb4e.png)
 
 ![m1](https://user-images.githubusercontent.com/69087617/220208072-2fe5a431-853c-47fc-86cd-32adede65a37.png)

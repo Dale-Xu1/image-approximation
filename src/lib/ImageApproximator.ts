@@ -56,8 +56,6 @@ export default class ImageApproximator
 
     private start()
     {
-        if (this.best) this.image.shapes.push(this.best)
-
         this.image.render()
         this.previous = this.image.error(this.target)
 
@@ -71,9 +69,11 @@ export default class ImageApproximator
     private best!: Shape
 
     private previous!: number
-    public error!: number
+    private error!: number
 
-    public i: number = 0
+    public get current() { return Math.min(this.previous, this.error) }
+
+    private i: number = 0
     public run()
     {
         let [shape, raster] = this.mutate()
@@ -91,7 +91,9 @@ export default class ImageApproximator
             this.i++
             if (this.i > Constants.TRIANGLE_ITERATIONS)
             {
+                this.image.shapes.push(this.best)
                 this.start()
+
                 this.i = 0
             }
         }

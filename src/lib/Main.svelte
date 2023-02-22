@@ -14,13 +14,16 @@ let approximator: ImageApproximator
 
 onMount(() =>
 {
-    main.prepend(reference)
     approximator = new ImageApproximator(canvas, target, generator)
+    error = approximator.current
 
+    main.prepend(reference)
     return stop
 })
 
 let n = 0
+let error = 0
+
 let max = 300
 
 let handler: number
@@ -31,9 +34,9 @@ function run()
     for (let n = 0; n < 800; n++) approximator.run()
 
     n = approximator.image.shapes.length
-    if (n >= max) stop()
+    error = approximator.current
 
-    console.log(n, approximator.i, approximator.error)
+    if (n >= max) stop()
 }
 
 let running = false
@@ -87,6 +90,9 @@ function exportJSON()
         </div>
         <div>
             <span>Shapes: {n}</span><br>
+            <span>Error: {error.toFixed(4)}</span>
+        </div>
+        <div>
             <span>Maximum shapes:</span><br>
             <input type="number" bind:value={max}>
         </div>
@@ -102,8 +108,8 @@ function exportJSON()
     padding: 20px;
 }
 
-canvas {
-    margin-left: 8px;
+:global(img) {
+    margin-right: 8px;
 }
 
 form > div {
