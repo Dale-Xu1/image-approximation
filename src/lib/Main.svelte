@@ -86,12 +86,13 @@ function exportJSON()
             <input type="button" value="Export JSON" on:click={exportJSON}>
         </div>
         <div>
-            <label for="max">Maximum shapes:</label><br>
-            <input id="max" type="number" bind:value={max}>
+            <span>Shapes: {n}</span><br>
+            <span>Maximum shapes:</span><br>
+            <input type="number" bind:value={max}>
         </div>
         <div>
-            <label for="dimension">Export dimension:</label><br>
-            <input id="dimension" type="number" bind:value={dimension}>
+            <span>Export dimension:</span><br>
+            <input type="number" bind:value={dimension}>
         </div>
     </form>
 </div>

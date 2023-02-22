@@ -6,7 +6,7 @@ This program attempts to approximate an image using geometry. This is still slig
 
 If you don't want to clone the repository and run it yourself, the project is hosted at: https://image-approximation.vercel.app/
 
-The way the algorithm works is by generating a random shape and repeatedly applying mutations to it. While it does this, it keeps track of the shape that best minimizes the error function (which computes how close the result is to the original image). After a certain amount of iterations, it moves onto the next shape.
+How the algorithm works is by first generating a random shape as an initial guess. It then repeatedly applies mutations to that shape while keeping track of which best minimize the error function. The error function used to compare shapes is an RMSE, which computes how close the result is to the original image. After a certain amount of iterations, the program moves onto the next shape and repeats the process.
 
 ## Setup
 
