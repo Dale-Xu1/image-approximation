@@ -7,11 +7,13 @@ import type { Generator } from "$lib/ImageApproximator"
 
 import Rectangle from "../lib/Shape/Rectangle"
 import Triangle from "$lib/Shape/Triangle"
+import Ellipse from "$lib/Shape/Ellipse"
 
 enum Shape
 {
     TRIANGLE,
-    RECTANGLE
+    RECTANGLE,
+    ELLIPSE
 }
 
 let files: FileList
@@ -42,6 +44,7 @@ function decodeGenerator(shape: Shape): Generator
     {
         case Shape.TRIANGLE: return Triangle.random
         case Shape.RECTANGLE: return Rectangle.random
+        case Shape.ELLIPSE: return Ellipse.random
     }
 }
 
@@ -97,8 +100,12 @@ async function toImage(data: string): Promise<HTMLImageElement>
                 Triangle
             </label>
             <label>
-                <input type="radio"  bind:group={shape} value={Shape.RECTANGLE}>
+                <input type="radio" bind:group={shape} value={Shape.RECTANGLE}>
                 Rectangle
+            </label>
+            <label>
+                <input type="radio" bind:group={shape} value={Shape.ELLIPSE}>
+                Ellipse
             </label>
         </div>
         <input type="file" accept="image/*" bind:files={files} on:change={select} />

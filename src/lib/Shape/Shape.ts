@@ -13,7 +13,6 @@ export default abstract class Shape
     public abstract render(c: CanvasRenderingContext2D): void
 
     private clamp(x: number): number { return Math.min(Math.max(x, 0), 1) }
-
     protected mutateColor(): Color4
     {
         let r = this.clamp(this.color.r + Random.normal(Constants.COLOR_SD))

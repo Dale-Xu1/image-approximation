@@ -2,11 +2,9 @@
 
 ## Overview
 
-This program attempts to approximate an image using geometry. This is still slightly work in progress, and only rectangles and triangles have been supported as of now. I still need to figure out how to rasterize an ellipse. Possible additions could also include lines and bezier curves.
+This program attempts to approximate an image using geometry. Currently triangles, rectangles, and ellipses have been supported. If you don't want to clone the repository and run it yourself, the project is hosted at: https://image-approximation.vercel.app/
 
-If you don't want to clone the repository and run it yourself, the project is hosted at: https://image-approximation.vercel.app/
-
-How the algorithm works is by first generating a random shape as an initial guess. It then repeatedly applies mutations to that shape while keeping track of which best minimize the error function. The error function used to compare shapes is an RMSE, which computes how close the result is to the original image. After a certain amount of iterations, the program moves onto the next shape and repeats the process.
+How the algorithm works is by first generating a random shape as an initial guess. It then repeatedly applies mutations to that shape while keeping track of whichever best minimize the error function. After a certain amount of iterations, the program moves onto the next shape and repeats the process.
 
 ## Setup
 

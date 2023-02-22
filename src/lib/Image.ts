@@ -102,7 +102,7 @@ export class Raster
     public constructor(public readonly lines: Scanline[]) { }
 
 
-    private static limit(x: number, min: number, max: number): number { return Math.min(Math.max(x, min), max) }
+    private limit(x: number, min: number, max: number): number { return Math.min(Math.max(x, min), max) }
     public clamp(width: number, height: number): Raster
     {
         let lines: Scanline[] = []
@@ -112,8 +112,8 @@ export class Raster
             if (line.start >= width || line.end < 0) continue
 
             lines.push(new Scanline(line.y,
-                Raster.limit(line.start, 0, width - 1),
-                Raster.limit(line.end, 0, width - 1)))
+                this.limit(line.start, 0, width - 1),
+                this.limit(line.end, 0, width - 1)))
         }
 
         return new Raster(lines)
