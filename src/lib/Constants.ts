@@ -2,7 +2,7 @@ namespace Constants
 {
 
     export const MAX_DIMENSION = 256
-    export const TRIANGLE_ITERATIONS = 8000
+    export const ITERATIONS = 8000
 
     export const ALPHA = 0.8
 

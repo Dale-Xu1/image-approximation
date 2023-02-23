@@ -89,7 +89,7 @@ export default class ImageApproximator
         if (this.error < this.previous)
         {
             this.i++
-            if (this.i > Constants.TRIANGLE_ITERATIONS)
+            if (this.i > Constants.ITERATIONS)
             {
                 this.image.shapes.push(this.best)
                 this.start()

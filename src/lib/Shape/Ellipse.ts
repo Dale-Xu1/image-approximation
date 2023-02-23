@@ -44,7 +44,6 @@ export default class Ellipse extends Shape
         return new Ellipse(position, a, w, h, color)
     }
 
-
     public rasterize(): Raster
     {
         let lines: Scanline[] = []
@@ -78,7 +77,7 @@ export default class Ellipse extends Shape
             y++
             dy += 2 * w * w
 
-            if (d1 < 0) d1 += dy + (w * w)
+            if (d1 < 0) d1 += w * w + dy
             else
             {
                 x--

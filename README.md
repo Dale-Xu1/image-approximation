@@ -22,12 +22,14 @@ npm run dev
 
 ## Examples
 
-![h250](https://user-images.githubusercontent.com/69087617/219876123-d66c71b6-c96c-427f-b62b-620dffc203fa.png)
+![](https://user-images.githubusercontent.com/69087617/220656360-34ab2ce5-ea9d-47fb-be76-fca7879700ab.png)
 
-![w300](https://user-images.githubusercontent.com/69087617/219879590-c6501947-ccab-49c5-9a2e-bdb398b86f93.png)
+![](https://user-images.githubusercontent.com/69087617/219876123-d66c71b6-c96c-427f-b62b-620dffc203fa.png)
 
-![i](https://user-images.githubusercontent.com/69087617/220656360-34ab2ce5-ea9d-47fb-be76-fca7879700ab.png)
+![](https://user-images.githubusercontent.com/69087617/219879590-c6501947-ccab-49c5-9a2e-bdb398b86f93.png)
 
-![t3](https://user-images.githubusercontent.com/69087617/219907978-87a44f99-a2c0-4c76-9ddd-d48ddc78fb4e.png)
+![](https://user-images.githubusercontent.com/69087617/220981427-284d4193-c12f-47e9-82ef-b409d5fa37a1.png)
 
-![m3](https://user-images.githubusercontent.com/69087617/220712413-d9198b91-2c1f-48d3-b376-23c58b2bfca8.png)
+![](https://user-images.githubusercontent.com/69087617/219907978-87a44f99-a2c0-4c76-9ddd-d48ddc78fb4e.png)
+
+![](https://user-images.githubusercontent.com/69087617/220712413-d9198b91-2c1f-48d3-b376-23c58b2bfca8.png)
