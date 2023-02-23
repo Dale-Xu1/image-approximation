@@ -32,4 +32,4 @@ npm run dev
 
 ![](https://user-images.githubusercontent.com/69087617/219907978-87a44f99-a2c0-4c76-9ddd-d48ddc78fb4e.png)
 
-![](https://user-images.githubusercontent.com/69087617/220712413-d9198b91-2c1f-48d3-b376-23c58b2bfca8.png)
+![](https://user-images.githubusercontent.com/69087617/220983153-6355c24d-adec-4778-951e-4290ac6c01ea.png)
