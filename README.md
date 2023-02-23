@@ -22,14 +22,17 @@ npm run dev
 
 ## Examples
 
-![](https://user-images.githubusercontent.com/69087617/220656360-34ab2ce5-ea9d-47fb-be76-fca7879700ab.png)
-
 ![](https://user-images.githubusercontent.com/69087617/219876123-d66c71b6-c96c-427f-b62b-620dffc203fa.png)
+
+![](https://user-images.githubusercontent.com/69087617/220656360-34ab2ce5-ea9d-47fb-be76-fca7879700ab.png)
 
 ![](https://user-images.githubusercontent.com/69087617/219879590-c6501947-ccab-49c5-9a2e-bdb398b86f93.png)
 
 ![](https://user-images.githubusercontent.com/69087617/220981427-284d4193-c12f-47e9-82ef-b409d5fa37a1.png)
 
-![](https://user-images.githubusercontent.com/69087617/219907978-87a44f99-a2c0-4c76-9ddd-d48ddc78fb4e.png)
+<p float="left">
+    <img src="https://user-images.githubusercontent.com/69087617/220984137-572a066b-5875-4c22-97ef-000c48b5b60c.png" width="46%">
+    <img src="https://user-images.githubusercontent.com/69087617/220983153-6355c24d-adec-4778-951e-4290ac6c01ea.png" width="53%">
+</p>
 
-![](https://user-images.githubusercontent.com/69087617/220983153-6355c24d-adec-4778-951e-4290ac6c01ea.png)
+![](https://user-images.githubusercontent.com/69087617/219907978-87a44f99-a2c0-4c76-9ddd-d48ddc78fb4e.png)
