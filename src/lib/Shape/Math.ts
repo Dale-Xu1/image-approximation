@@ -3,33 +3,13 @@ import Constants from "../Constants"
 export class Random
 {
 
-    // TODO: Delete this
-    private static seed = 1337
-    private static random = Random.sfc32(0x9E3779B9, 0x243F6A88, 0xB7E15162, Random.seed ^ 0xDEADBEEF)
-
-    private static sfc32(a: number, b: number, c: number, d: number) {
-        return function() {
-            a >>>= 0; b >>>= 0; c >>>= 0; d >>>= 0
-            let t = (a + b) | 0
-
-            a = b ^ b >>> 9
-            b = c + (c << 3) | 0
-            c = (c << 21 | c >>> 11)
-            d = d + 1 | 0
-            t = t + d | 0
-            c = c + t | 0
-            
-            return (t >>> 0) / 4294967296
-        }
-    }
-
-    public static next(range: number = 1): number { return Random.random() * range }
+    public static next(range: number = 1): number { return Math.random() * range }
     public static int(range: number): number { return Math.trunc(Random.next(range)) }
 
     public static normal(sd: number): number
     {
-        let u = 1 - Random.random()
-        let v = 1 - Random.random()
+        let u = 1 - Math.random()
+        let v = 1 - Math.random()
 
         return Math.sqrt(-2 * Math.log(u)) * Math.sin(2 * Math.PI * v) * sd
     }
