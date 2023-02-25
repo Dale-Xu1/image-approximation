@@ -6,6 +6,14 @@ This program attempts to approximate an image using geometry. Currently triangle
 
 How the algorithm works is by first generating a random shape as an initial guess. It then repeatedly applies mutations to that shape while keeping track of whichever best minimize the error function. After a certain amount of iterations, the program moves onto the next shape and repeats the process.
 
+## How to use
+
+The program initially prompts the user for an image file and the type of shape. After an image is selected, clicking the start button will begin the approximation algorithm. The export button will download the generated result as a .png file.
+
+`Maximum shapes` is the amount of shapes until which the program halts. You may set it to a higher value and resume execution if you wish.
+
+`Export dimension` is the longer side of the exported image. The shorter side is computed based on the aspect ratio of the original target image.
+
 ## Setup
 
 Node.js is required to run the program. Upon cloning, install the dependencies by running the command:
