@@ -63,6 +63,9 @@ export default class ImageApproximator
         this.best = this.shape = shape
 
         this.error = this.image.partial(this.target, raster, this.shape.color, this.previous)
+
+        this.n = 0
+        this.i = 0
     }
 
     private shape!: Shape
@@ -73,7 +76,9 @@ export default class ImageApproximator
 
     public get current() { return Math.min(this.previous, this.error) }
 
+    private n: number = 0
     private i: number = 0
+
     public run()
     {
         let [shape, raster] = this.mutate()
@@ -93,9 +98,12 @@ export default class ImageApproximator
             {
                 this.image.shapes.push(this.best)
                 this.start()
-
-                this.i = 0
             }
+        }
+        else
+        {
+            this.n++
+            if (this.n > Constants.RESET) this.start()
         }
     }
 
@@ -112,12 +120,11 @@ export default class ImageApproximator
     private mutate(): [Shape, Raster]
     {
         let shape!: Shape
-        switch (Random.int(3))
-        {
-            case 0: return this.reset()
-            case 1: shape = this.shape.mutate(); break
-            case 2: shape = this.best.mutate(); break
-        }
+        let r = Random.next()
+
+        if (r < 0.3) return this.reset()
+        else if (r < 0.6) shape = this.best.mutate()
+        else shape = this.shape.mutate()
 
         let raster = shape.rasterize().clamp(this.width, this.height)
         if (raster.area < Constants.MIN_PIXELS) return this.mutate()
