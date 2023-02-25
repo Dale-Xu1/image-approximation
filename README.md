@@ -10,7 +10,7 @@ How the algorithm works is by first generating a random shape as an initial gues
 
 The program initially prompts the user for an image file and the type of shape. After an image is selected, clicking the start button will begin the approximation algorithm. The export button will download the generated result as a .png file.
 
-`Maximum shapes` is the amount of shapes until which the program halts. You may set it to a higher value and resume execution if you wish.
+`Run until shapes` is the amount of shapes the program can reach until which the program halts. You may set it to a higher value at any point and resume execution if you wish.
 
 `Iterations per frame` allows you to increase the amount of computation performed per frame, so there is some level of control over how much of the CPU is used at a given moment.
 
