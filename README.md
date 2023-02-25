@@ -6,7 +6,7 @@ This program attempts to approximate an image using geometry. Currently triangle
 
 How the algorithm works is by first generating a random shape as an initial guess. It then repeatedly applies mutations to that shape while keeping track of whichever best minimize the error function. After a certain amount of iterations, the program moves onto the next shape and repeats the process.
 
-## How to use
+## Instructions
 
 The program initially prompts the user for an image file and the type of shape. After an image is selected, clicking the start button will begin the approximation algorithm. The export button will download the generated result as a .png file.
 
