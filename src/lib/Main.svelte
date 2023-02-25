@@ -1,6 +1,8 @@
 <script lang="ts">
 import { onMount } from "svelte"
+
 import ImageApproximator, { type Generator } from "../lib/ImageApproximator"
+import Constants from "./Constants"
 
 export let target: ImageData
 export let reference: HTMLImageElement
@@ -25,13 +27,17 @@ let n = 0
 let error = 0
 
 let max = 300
+let iterations = 800
+let min = Constants.MIN_WIDTH
+
+$: Constants.MIN_WIDTH = min
 
 let handler: number
 function run()
 {
     handler = window.requestAnimationFrame(run)
 
-    for (let n = 0; n < 800; n++) approximator.run()
+    for (let n = 0; n < iterations; n++) approximator.run()
 
     n = approximator.image.shapes.length
     error = approximator.current
@@ -95,6 +101,14 @@ function exportJSON()
         <div>
             <span>Maximum shapes:</span><br>
             <input type="number" bind:value={max}>
+        </div>
+        <div>
+            <span>Iterations per frame:</span><br>
+            <input type="number" bind:value={iterations}>
+        </div>
+        <div>
+            <span>Minimum width:</span><br>
+            <input type="number" bind:value={min}>
         </div>
         <div>
             <span>Export dimension:</span><br>

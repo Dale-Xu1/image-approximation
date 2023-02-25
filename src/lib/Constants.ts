@@ -7,7 +7,7 @@ namespace Constants
 
     export const ALPHA = 0.8
 
-    export const MIN_WIDTH = 1.5
+    export let MIN_WIDTH = 1.5
     export const MIN_PIXELS = 4
 
     export const RANGE = 120
