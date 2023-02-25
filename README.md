@@ -8,13 +8,15 @@ How the algorithm works is by first generating a random shape as an initial gues
 
 ## Instructions
 
-The program initially prompts the user for an image file and the type of shape. After an image is selected, clicking the start button will begin the approximation algorithm. The export button will download the generated result as a .png file.
+The program initially prompts the user for an image file and the type of shape. You can also set the render dimension.
+
+`Render dimension` is the scale that the target image is resized to. Higher values will result in thinner shapes and potentially more accurate results, but at the cost of speed.
+
+After an image is selected, clicking the start button will begin the approximation algorithm. The export button will download the generated result as a .png file.
 
 `Run until shapes` is the amount of shapes the program can reach until which the program halts. You may set it to a higher value at any point and resume execution if you wish.
 
 `Iterations per frame` allows you to increase the amount of computation performed per frame, so there is some level of control over how much of the CPU is used at a given moment.
-
-`Minimum width` is the minimum width a shape can have in pixels. This value is not representative of the minimum width in the exported upscaled image This is to prevent incredibly thin shapes from being generated, which usually don't look good.
 
 `Export dimension` is the longer side of the exported image. The shorter side is computed based on the aspect ratio of the original target image.
 

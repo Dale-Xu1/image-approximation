@@ -28,9 +28,6 @@ let error = 0
 
 let max = 500
 let iterations = 800
-let min = Constants.MIN_WIDTH
-
-$: Constants.MIN_WIDTH = min
 
 let handler: number
 function run()
@@ -105,10 +102,6 @@ function exportJSON()
         <div>
             <span>Iterations per frame:</span><br>
             <input type="number" bind:value={iterations}>
-        </div>
-        <div>
-            <span>Minimum shape width (not recommended to change while program is running):</span><br>
-            <input type="number" bind:value={min}>
         </div>
         <div>
             <span>Export dimension:</span><br>

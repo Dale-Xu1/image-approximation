@@ -21,7 +21,10 @@ let files: FileList
 let target: ImageData | null = null
 let reference: HTMLImageElement
 
-let shape: Shape = Shape.RECTANGLE
+let shape = Shape.RECTANGLE
+let dimension = Constants.MAX_DIMENSION
+
+$: Constants.MAX_DIMENSION = dimension
 
 async function select()
 {
@@ -108,6 +111,10 @@ async function toImage(data: string): Promise<HTMLImageElement>
                 Ellipse
             </label>
         </div>
+        <div>
+            <span>Render dimension:</span><br>
+            <input class="value" type="number" bind:value={dimension} >
+        </div>
         <input type="file" accept="image/*" bind:files={files} on:change={select} />
     </div>
 {/if}
@@ -128,6 +135,11 @@ async function toImage(data: string): Promise<HTMLImageElement>
 
 .main > div {
     margin-bottom: 8px;
+}
+
+.value {
+    margin-top: 4px;
+    padding: 4px;
 }
 
 input::file-selector-button {
