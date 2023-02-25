@@ -26,7 +26,7 @@ onMount(() =>
 let n = 0
 let error = 0
 
-let max = 300
+let max = 500
 let iterations = 800
 let min = Constants.MIN_WIDTH
 
@@ -99,7 +99,7 @@ function exportJSON()
             <span>Error: {error.toFixed(4)}</span>
         </div>
         <div>
-            <span>Maximum shapes:</span><br>
+            <span>Run until shapes:</span><br>
             <input type="number" bind:value={max}>
         </div>
         <div>
@@ -107,7 +107,7 @@ function exportJSON()
             <input type="number" bind:value={iterations}>
         </div>
         <div>
-            <span>Minimum width:</span><br>
+            <span>Minimum shape width (not recommended to change while program is running):</span><br>
             <input type="number" bind:value={min}>
         </div>
         <div>
