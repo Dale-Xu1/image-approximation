@@ -12,6 +12,10 @@ The program initially prompts the user for an image file and the type of shape. 
 
 `Maximum shapes` is the amount of shapes until which the program halts. You may set it to a higher value and resume execution if you wish.
 
+`Iterations per frame` allows you to increase the amount of computation performed per frame, so there is some level of control over how much of the CPU is used at a given moment.
+
+`Minimum width` is the minimum width a shape can have in pixels. This value is not representative of the minimum width in the exported upscaled image This is to prevent incredibly thin shapes from being generated, which usually don't look good.
+
 `Export dimension` is the longer side of the exported image. The shorter side is computed based on the aspect ratio of the original target image.
 
 ## Setup
