@@ -1,13 +1,13 @@
 <script lang="ts">
 import Main from "../lib/Main.svelte"
 
-import Constants from "../lib/Constants"
-import Image from "../lib/Image"
-import type { Generator } from "$lib/ImageApproximator"
+import Constants from "../lib/Approximator/Constants"
+import Image from "../lib/Approximator/Image"
+import type { Generator } from "../lib/Approximator/ImageApproximator"
 
 import Rectangle from "../lib/Shape/Rectangle"
-import Triangle from "$lib/Shape/Triangle"
-import Ellipse from "$lib/Shape/Ellipse"
+import Triangle from "../lib/Shape/Triangle"
+import Ellipse from "../lib/Shape/Ellipse"
 
 enum Shape
 {

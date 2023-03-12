@@ -1,5 +1,5 @@
-import Constants from "../Constants"
-import { Raster, Scanline } from "../Image"
+import Constants from "../Approximator/Constants"
+import { Raster, Scanline } from "../Approximator/Image"
 import { Color4, Random, Vector2 } from "./Math"
 import Shape from "./Shape"
 

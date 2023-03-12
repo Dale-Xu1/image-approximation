@@ -1,5 +1,5 @@
-import Constants from "../Constants"
-import type { Raster } from "../Image"
+import Constants from "../Approximator/Constants"
+import type { Raster } from "../Approximator/Image"
 import { Color4, Random } from "./Math"
 
 export default abstract class Shape
