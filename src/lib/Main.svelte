@@ -1,8 +1,6 @@
 <script lang="ts">
 import { onMount } from "svelte"
-
 import ImageApproximator, { type Generator } from "../lib/ImageApproximator"
-import Constants from "./Constants"
 
 export let target: ImageData
 export let reference: HTMLImageElement

@@ -6,7 +6,7 @@ namespace Constants
     export const ITERATIONS = 8000
     export const RESET = 80000
 
-    export const ALPHA = 0.8
+    export const MIN_ALPHA = 0.8
 
     export const MIN_WIDTH = 1.5
     export const MIN_PIXELS = 4

@@ -4,6 +4,8 @@ export class Random
 {
 
     public static next(range: number = 1): number { return Math.random() * range }
+    public static range(min: number, max: number): number { return Random.next(max - min) + min }
+
     public static int(range: number): number { return Math.trunc(Random.next(range)) }
 
     public static normal(sd: number): number
@@ -64,7 +66,7 @@ export class Color4
 
     public static random(): Color4
     {
-        return new Color4(Random.next(), Random.next(), Random.next(), Constants.ALPHA)
+        return new Color4(Random.next(), Random.next(), Random.next(), Random.range(Constants.MIN_ALPHA, 1))
     }
 
 
