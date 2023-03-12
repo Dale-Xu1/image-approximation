@@ -1,6 +1,6 @@
 import Image, { Raster } from "./Image"
-import { Color4, Random } from "../Shape/Math"
-import type Shape from "../Shape/Shape"
+import { Color4, Random } from "../shape/Math"
+import type Shape from "../shape/Shape"
 import Constants from "./Constants"
 
 export interface Generator

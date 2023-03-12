@@ -1,4 +1,4 @@
-import Constants from "../Approximator/Constants"
+import Constants from "../approximator/Constants"
 
 export class Random
 {

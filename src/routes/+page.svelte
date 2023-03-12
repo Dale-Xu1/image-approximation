@@ -1,13 +1,13 @@
 <script lang="ts">
 import Main from "../lib/Main.svelte"
 
-import Constants from "../lib/Approximator/Constants"
-import Image from "../lib/Approximator/Image"
-import type { Generator } from "../lib/Approximator/ImageApproximator"
+import Constants from "../lib/approximator/Constants"
+import Image from "../lib/approximator/Image"
+import type { Generator } from "../lib/approximator/ImageApproximator"
 
-import Rectangle from "../lib/Shape/Rectangle"
-import Triangle from "../lib/Shape/Triangle"
-import Ellipse from "../lib/Shape/Ellipse"
+import Rectangle from "../lib/shape/Rectangle"
+import Triangle from "../lib/shape/Triangle"
+import Ellipse from "../lib/shape/Ellipse"
 
 enum Shape
 {
@@ -19,7 +19,7 @@ enum Shape
 let files: FileList
 
 let target: ImageData | null = null
-let reference: HTMLImageElement
+let image: HTMLImageElement
 
 let shape = Shape.RECTANGLE
 let dimension = Constants.MAX_DIMENSION
@@ -29,16 +29,16 @@ $: Constants.MAX_DIMENSION = dimension
 async function select()
 {
     let data = await readFile(files[0])
-    reference = await toImage(data)
+    image = await toImage(data)
 
     // Calculate canvas dimensions based on original aspect ratio
-    let ratio = reference.width / reference.height
+    let ratio = image.width / image.height
     let [width, height] = Image.dimensions(Constants.MAX_DIMENSION, ratio)
 
-    reference.width = width
-    reference.height = height
+    image.width = width
+    image.height = height
 
-    target = resizeImageData(reference, width, height)
+    target = resizeImageData(image, width, height)
 }
 
 function decodeGenerator(shape: Shape): Generator
@@ -94,7 +94,7 @@ async function toImage(data: string): Promise<HTMLImageElement>
 </script>
 
 {#if target}
-    <Main {target} {reference} generator={decodeGenerator(shape)} />
+    <Main {target} {image} generator={decodeGenerator(shape)} />
 {:else}
     <div class="main">
         <div>

@@ -1,9 +1,9 @@
 <script lang="ts">
 import { onMount } from "svelte"
-import ImageApproximator, { type Generator } from "./Approximator/ImageApproximator"
+import ImageApproximator, { type Generator } from "./approximator/ImageApproximator"
 
 export let target: ImageData
-export let reference: HTMLImageElement
+export let image: HTMLImageElement
 
 export let generator: Generator
 
@@ -17,7 +17,7 @@ onMount(() =>
     approximator = new ImageApproximator(canvas, target, generator)
     error = approximator.current
 
-    main.prepend(reference)
+    main.prepend(image)
     return stop
 })
 
