@@ -2,10 +2,19 @@
 import { onMount } from "svelte"
 import ImageApproximator, { type Generator } from "./approximator/ImageApproximator"
 
+import Rectangle from "./shape/Rectangle"
+import Triangle from "./shape/Triangle"
+import Ellipse from "./shape/Ellipse"
+
+enum Shape
+{
+    TRIANGLE,
+    RECTANGLE,
+    ELLIPSE
+}
+
 export let target: ImageData
 export let image: HTMLImageElement
-
-export let generator: Generator
 
 let main: HTMLDivElement
 let canvas: HTMLCanvasElement
@@ -14,12 +23,15 @@ let approximator: ImageApproximator
 
 onMount(() =>
 {
-    approximator = new ImageApproximator(canvas, target, generator)
+    approximator = new ImageApproximator(canvas, target, Rectangle.random)
     error = approximator.current
 
     main.prepend(image)
     return stop
 })
+
+let shape = Shape.RECTANGLE
+$: updateShape(shape)
 
 let n = 0
 let error = 0
@@ -57,6 +69,23 @@ function stop()
     running = false
 }
 
+
+function updateShape(shape: Shape)
+{
+    if (!approximator) return
+
+    let generator: Generator
+    switch (shape)
+    {
+        case Shape.TRIANGLE: generator = Triangle.random; break
+        case Shape.RECTANGLE: generator = Rectangle.random; break
+        case Shape.ELLIPSE: generator = Ellipse.random; break
+    }
+
+    approximator.generator = generator
+    approximator.reset()
+}
+
 let dimension = 3840
 function exportImage()
 {
@@ -88,6 +117,11 @@ function exportJSON()
                 on:click={toggle}>
             <input type="button" value="Export" on:click={exportImage}>
             <input type="button" value="Export JSON" on:click={exportJSON}>
+        </div>
+        <div>
+            <label><input type="radio" bind:group={shape} value={Shape.TRIANGLE}>Triangle</label>
+            <label><input type="radio" bind:group={shape} value={Shape.RECTANGLE}>Rectangle</label>
+            <label><input type="radio" bind:group={shape} value={Shape.ELLIPSE}>Ellipse</label>
         </div>
         <div>
             <span>Shapes: {n}</span><br>
@@ -124,6 +158,11 @@ form > div {
 input {
     margin-top: 4px;
     padding: 4px;
+}
+
+label input {
+    margin: 0;
+    margin-right: 4px;
 }
 
 </style>

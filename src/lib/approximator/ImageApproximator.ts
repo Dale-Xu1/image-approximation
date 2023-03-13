@@ -11,6 +11,8 @@ export interface Generator
 export default class ImageApproximator
 {
 
+    public generator: Generator
+
     private readonly ratio: number
 
     private readonly width: number
@@ -29,7 +31,7 @@ export default class ImageApproximator
         let c = canvas.getContext("2d")!
         this.image = new Image(c, this.width, this.height, this.averageColor(this.target))
 
-        this.start()
+        this.init()
     }
 
     private averageColor(target: ImageData): Color4
@@ -51,22 +53,6 @@ export default class ImageApproximator
 
     public readonly image: Image
     private readonly target: ImageData
-
-    private readonly generator: Generator
-
-    private start()
-    {
-        this.image.render()
-        this.previous = this.image.error(this.target)
-
-        let [shape, raster] = this.reset()
-        this.best = this.shape = shape
-
-        this.error = this.image.partial(this.target, raster, this.shape.color, this.previous)
-
-        this.n = 0
-        this.i = 0
-    }
 
     private shape!: Shape
     private best!: Shape
@@ -97,24 +83,14 @@ export default class ImageApproximator
             if (this.i > Constants.ITERATIONS)
             {
                 this.image.shapes.push(this.best)
-                this.start()
+                this.init()
             }
         }
         else
         {
             this.n++
-            if (this.n > Constants.RESET) this.start()
+            if (this.n > Constants.RESET) this.reset()
         }
-    }
-
-    private reset(): [Shape, Raster]
-    {
-        let shape = this.generator(this.width, this.height)
-
-        let raster = shape.rasterize().clamp(this.width, this.height)
-        if (raster.area < Constants.MIN_PIXELS) return this.reset()
-
-        return [shape, raster]
     }
 
     private mutate(): [Shape, Raster]
@@ -122,12 +98,42 @@ export default class ImageApproximator
         let shape!: Shape
         let r = Random.next()
 
-        if (r < 0.3) return this.reset()
+        if (r < 0.3) return this.next()
         else if (r < 0.6) shape = this.best.mutate()
         else shape = this.shape.mutate()
 
         let raster = shape.rasterize().clamp(this.width, this.height)
         if (raster.area < Constants.MIN_PIXELS) return this.mutate()
+
+        return [shape, raster]
+    }
+
+
+    public reset()
+    {
+        let [shape, raster] = this.next()
+        this.best = this.shape = shape
+
+        this.error = this.image.partial(this.target, raster, this.shape.color, this.previous)
+
+        this.n = 0
+        this.i = 0
+    }
+
+    private init()
+    {
+        this.image.render()
+        this.previous = this.image.error(this.target)
+
+        this.reset()
+    }
+
+    private next(): [Shape, Raster]
+    {
+        let shape = this.generator(this.width, this.height)
+
+        let raster = shape.rasterize().clamp(this.width, this.height)
+        if (raster.area < Constants.MIN_PIXELS) return this.next()
 
         return [shape, raster]
     }

@@ -3,27 +3,13 @@ import Main from "../lib/Main.svelte"
 
 import Constants from "../lib/approximator/Constants"
 import Image from "../lib/approximator/Image"
-import type { Generator } from "../lib/approximator/ImageApproximator"
-
-import Rectangle from "../lib/shape/Rectangle"
-import Triangle from "../lib/shape/Triangle"
-import Ellipse from "../lib/shape/Ellipse"
-
-enum Shape
-{
-    TRIANGLE,
-    RECTANGLE,
-    ELLIPSE
-}
 
 let files: FileList
 
 let target: ImageData | null = null
 let image: HTMLImageElement
 
-let shape = Shape.RECTANGLE
 let dimension = Constants.MAX_DIMENSION
-
 $: Constants.MAX_DIMENSION = dimension
 
 async function select()
@@ -39,16 +25,6 @@ async function select()
     image.height = height
 
     target = resizeImageData(image, width, height)
-}
-
-function decodeGenerator(shape: Shape): Generator
-{
-    switch (shape)
-    {
-        case Shape.TRIANGLE: return Triangle.random
-        case Shape.RECTANGLE: return Rectangle.random
-        case Shape.ELLIPSE: return Ellipse.random
-    }
 }
 
 function resizeImageData(image: HTMLImageElement, width: number, height: number): ImageData
@@ -94,22 +70,12 @@ async function toImage(data: string): Promise<HTMLImageElement>
 </script>
 
 {#if target}
-    <Main {target} {image} generator={decodeGenerator(shape)} />
+    <Main {target} {image} />
 {:else}
     <div class="main">
         <div>
-            <label>
-                <input type="radio" bind:group={shape} value={Shape.TRIANGLE}>
-                Triangle
-            </label>
-            <label>
-                <input type="radio" bind:group={shape} value={Shape.RECTANGLE}>
-                Rectangle
-            </label>
-            <label>
-                <input type="radio" bind:group={shape} value={Shape.ELLIPSE}>
-                Ellipse
-            </label>
+            <h1>Image Approximation</h1>
+            <p>This program attempts to approximate an image using geometry.</p>
         </div>
         <div>
             <span>Render dimension:</span><br>
@@ -127,6 +93,10 @@ async function toImage(data: string): Promise<HTMLImageElement>
 
     font-family: Arial, Helvetica, sans-serif;
     font-size: 14px;
+}
+
+h1 {
+    font-size: 20px;
 }
 
 .main {

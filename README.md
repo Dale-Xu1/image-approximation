@@ -8,11 +8,11 @@ How the algorithm works is by first generating a random shape as an initial gues
 
 ## Instructions
 
-The program initially prompts the user for an image file and the type of shape. You can also set the render dimension.
+The program initially prompts the user for a target image file. The render dimension must also be set before the algorithm begins.
 
 `Render dimension` is the scale that the target image is resized to. Higher values will result in thinner shapes and potentially more accurate results, but at the cost of speed.
 
-After an image is selected, clicking the start button will begin the approximation algorithm. The export button will download the generated result as a .png file.
+After an image is selected, clicking the start button will begin the approximation algorithm. Different types of shapes may be selected throughout the course of execution. The export button will download the generated result as a .png file.
 
 `Run until shapes` is the amount of shapes the program can reach until which the program halts. You may set it to a higher value at any point and resume execution if you wish.
 
