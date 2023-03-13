@@ -53,18 +53,17 @@ export default class ImageApproximator
     private readonly image: Image
     private readonly target: ImageData
 
-    public get shapes(): Shape[] { return this.image.shapes }
-
     private shape!: Shape
     private best!: Shape
 
     private previous!: number
     private error!: number
 
-    public get current() { return Math.min(this.previous, this.error) }
-
     private n: number = 0
     private i: number = 0
+
+    public get shapes(): Shape[] { return this.image.shapes }
+    public get current() { return Math.min(this.previous, this.error) }
 
     public run()
     {

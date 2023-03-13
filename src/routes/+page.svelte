@@ -74,7 +74,7 @@ async function toImage(data: string): Promise<HTMLImageElement>
 {:else}
     <div class="main">
         <h1>Image Approximation</h1>
-        <p>This program attempts to approximate an image using geometry</p><br>
+        <p>Select an image to approximate using geometry</p><br>
         <div>
             <span>Render dimension:</span><br>
             <input class="value" type="number" bind:value={dimension} >
