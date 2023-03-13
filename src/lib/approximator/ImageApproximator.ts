@@ -1,6 +1,5 @@
 import Image, { Raster } from "./Image"
-import { Color4, Random } from "../shape/Math"
-import type Shape from "../shape/Shape"
+import Shape, { Color4, Random } from "../shape/Shape"
 import Constants from "./Constants"
 
 export interface Generator
@@ -51,8 +50,10 @@ export default class ImageApproximator
     }
 
 
-    public readonly image: Image
+    private readonly image: Image
     private readonly target: ImageData
+
+    public get shapes(): Shape[] { return this.image.shapes }
 
     private shape!: Shape
     private best!: Shape

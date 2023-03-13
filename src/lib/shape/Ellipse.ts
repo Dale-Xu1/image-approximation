@@ -1,7 +1,6 @@
 import Constants from "../approximator/Constants"
 import { Raster, Scanline } from "../approximator/Image"
-import { Color4, Random, Vector2 } from "./Math"
-import Shape from "./Shape"
+import Shape, { Color4, Random, Vector2 } from "./Shape"
 
 export default class Ellipse extends Shape
 {
@@ -54,6 +53,7 @@ export default class Ellipse extends Shape
 
         function addLine(x1: number, x2: number, y: number)
         {
+            // Apply shear transformation
             let t1 = Math.trunc(px + x1 + m * y)
             let t2 = Math.trunc(px + x2 + m * y)
 

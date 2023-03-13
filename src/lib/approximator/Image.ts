@@ -1,5 +1,5 @@
-import type { Color4 } from "../shape/Math"
 import type Shape from "../shape/Shape"
+import type { Color4 } from "../shape/Shape"
 
 export default class Image
 {

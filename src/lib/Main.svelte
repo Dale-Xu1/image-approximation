@@ -46,7 +46,7 @@ function run()
 
     for (let n = 0; n < iterations; n++) approximator.run()
 
-    n = approximator.image.shapes.length
+    n = approximator.shapes.length
     error = approximator.current
 
     if (n >= max) stop()

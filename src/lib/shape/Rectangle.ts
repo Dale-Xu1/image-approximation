@@ -1,7 +1,6 @@
 import Constants from "../approximator/Constants"
 import { Raster, Scanline } from "../approximator/Image"
-import { Color4, Random, Vector2 } from "./Math"
-import Shape from "./Shape"
+import Shape, { Color4, Random, Vector2 } from "./Shape"
 
 export default class Rectangle extends Shape
 {
